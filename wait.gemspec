@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.date     = '2012-05-25'
   s.summary  = "Executes a block until there's a result."
   s.authors  = ['Todd Mazierski']
-  s.email    = 'todd@foursquare.com'
+  s.email    = 'todd@paperlesspost.com'
   s.files    = ['lib/wait.rb']
-  s.homepage = 'http://github.com/foursquare/wait'
+  s.homepage = 'http://github.com/paperlesspost/wait'
 end

@@ -19,7 +19,7 @@ Rake::RDocTask.new do |rd|
 end
 
 Gokdok::Dokker.new do |gd|
-  gd.repo_url = 'git@github.com:foursquare/wait.git'
+  gd.repo_url = 'git@github.com:paperlesspost/wait.git'
   gd.remote_path = './'
 end
 

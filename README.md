@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/foursquare/wait.png)](http://travis-ci.org/foursquare/wait)
+[![Build Status](https://secure.travis-ci.org/paperlesspost/wait.png)](http://travis-ci.org/paperlesspost/wait)
 
 ## Description
 
@@ -13,7 +13,7 @@ The wait gem executes a block until there's a result. Useful for blocking script
 Add to your `Gemfile`:
 
 ```ruby
-gem 'wait', :git => 'git@github.com:foursquare/wait.git'
+gem 'wait', :git => 'git@github.com:paperlesspost/wait.git'
 ```
 
 ## Examples
@@ -63,4 +63,4 @@ end
 
 ## Documentation
 
-RDoc-generated documentation available [here](http://foursquare.github.com/wait/).
+RDoc-generated documentation available [here](http://paperlesspost.github.com/wait/).
