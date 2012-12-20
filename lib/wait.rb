@@ -12,7 +12,7 @@ class Wait
   #   Seconds until the block times out. Default is +15+.
   # [:delayer]
   #   Delay strategy to use to sleep in between attempts. Default is
-  #   +Wait::RegularDelayer+.
+  #   +Wait::RegularDelayer.new+.
   # [:rescue]
   #   One or an array of exceptions to rescue. Default is +nil+.
   # [:debug]

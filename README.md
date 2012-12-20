@@ -13,7 +13,7 @@ The wait gem executes a block until there's a result. Useful for blocking script
 Add to your `Gemfile`:
 
 ```ruby
-gem 'wait', :git => 'git@github.com:paperlesspost/wait.git'
+gem "wait", :git => "git@github.com:paperlesspost/wait.git"
 ```
 
 ## Examples
@@ -36,7 +36,7 @@ wait.until do |attempt|
   case attempt
   when 1 then nil
   when 2 then raise RuntimeError
-  when 3 then 'foo'
+  when 3 then "foo"
   end
 end
 # Rescued exception while waiting: Wait::NoResultError: result was nil
@@ -53,8 +53,8 @@ end
   <dd>Number of times to attempt the block. Default is <code>5</code>.</dd>
   <dt>:timeout</dt>
   <dd>Seconds until the block times out. Default is <code>15</code>.</dd>
-  <dt>:delay</dt>
-  <dd>Initial (grows exponentially) delay (in seconds) to wait in between attempts. Default is <code>1</code>.</dd>
+  <dt>:delayer</dt>
+  <dd>Delay strategy to use to sleep in between attempts. Default is <code>Wait::RegularDelayer.new</code>.</dd>
   <dt>:rescue</dt>
   <dd>One or an array of exceptions to rescue. Default is <code>nil</code>.</dd>
   <dt>:debug</dt>
