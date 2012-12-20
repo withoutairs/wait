@@ -11,7 +11,7 @@ class Wait
   # [:timeout]
   #   Seconds until the block times out. Default is +15+.
   # [:delayer]
-  #   Delay strategy to use to wait in between attempts. Default is
+  #   Delay strategy to use to sleep in between attempts. Default is
   #   +Wait::RegularDelayer+.
   # [:rescue]
   #   One or an array of exceptions to rescue. Default is +nil+.
@@ -25,12 +25,9 @@ class Wait
     @exceptions = options[:rescue]
     debug       = options[:debug]    || false
 
-    # Prevent accidentally causing an infinite loop.
-    unless @attempts.is_a?(Fixnum) and @attempts > 0
-      raise(ArgumentError, "invalid number of attempts: #{@attempts.inspect}")
-    end
+    @counter = AttemptCounter.new(@attempts)
 
-    unless @delayer.respond_to? :sleep
+    unless @delayer.respond_to?(:sleep)
       raise(ArgumentError, "delay strategy does not respond to sleep message: #{@delayer.inspect}")
     end
 
@@ -65,7 +62,7 @@ class Wait
   #     case attempt
   #     when 1 then nil
   #     when 2 then raise RuntimeError
-  #     when 3 then 'foo'
+  #     when 3 then "foo"
   #     end
   #   end
   #   # Rescued exception while waiting: Wait::NoResultError: result was nil
@@ -83,33 +80,34 @@ class Wait
   # The exception from the last attempt made.
   #
   def until(&block)
-    # Initialize the attempt counter.
-    attempt = 0
+    # Reset the attempt counter.
+    @counter.reset
 
     begin
-      attempt += 1
+      @counter.increment
 
       result = Timeout.timeout(@timeout, Wait::TimeoutError) do
-        # Execute the block and pass the attempt counter to it.
-        yield attempt
+        # Execute the block and pass the attempt value to it.
+        yield(@counter.attempt)
       end
 
       # If there's a result (neither +nil+ or +false+), return the result.
+      # Otherwise, raise a +Wait::NoResultError+ exception.
       if result
         result
       else
-        raise Wait::NoResultError, "result was #{result.inspect}"
+        raise(Wait::NoResultError, "result was #{result.inspect}")
       end
     rescue Wait::TimeoutError, Wait::NoResultError, *@exceptions => exception
       @logger.debug "Rescued exception while waiting: #{exception.class.name}: #{exception.message}"
       @logger.debug exception.backtrace.join("\n")
 
-      # If we've run out of attempts, raise the exception from the last
+      # If this was the last attempt, raise the exception from the last
       # attempt.
-      if attempt == @attempts
-        raise exception
+      if @counter.last_attempt?
+        raise(exception)
       else
-        @logger.debug "Attempt #{attempt}/#{@attempts} failed, delaying for #{@delayer}"
+        @logger.debug "Attempt #{@counter} failed, delaying for #{@delayer}"
         @delayer.sleep
         retry
       end
@@ -123,7 +121,7 @@ class Wait
   class TimeoutError < Timeout::Error; end
 
   class RegularDelayer
-    def initialize(initial_delay = 0.1)
+    def initialize(initial_delay = 1)
       @delay = initial_delay
     end
 
@@ -132,9 +130,9 @@ class Wait
     end
 
     def to_s
-      @delay.to_s
+      "#{@delay}s"
     end
-  end
+  end # RegularDelayer
 
   class ExponentialDelayer < RegularDelayer
     def sleep
@@ -145,6 +143,35 @@ class Wait
     def increment
       @delay *= 2
     end
-  end
+  end # ExponentialDelayer
 
+  class AttemptCounter
+    attr_reader :attempt
+
+    def initialize(total)
+      # Prevent accidentally causing an infinite loop.
+      unless total.is_a?(Fixnum) and total > 0
+        raise(ArgumentError, "invalid number of attempts: #{total.inspect}")
+      end
+
+      @total = total
+      reset
+    end
+
+    def reset
+      @attempt = 0
+    end
+
+    def increment
+      @attempt += 1
+    end
+
+    def last_attempt?
+      @attempt == @total
+    end
+
+    def to_s
+      [@attempt, @total].join("/")
+    end
+  end # AttemptCounter
 end #Wait
