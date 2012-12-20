@@ -1,27 +1,27 @@
-require 'rake/testtask'
+require "rake/testtask"
 
 # RDocTask is deprecated, but RDoc::Task is not available in Ruby 1.8.7.
 begin
-  require 'rdoc/task'
+  require "rdoc/task"
 rescue LoadError
-  require 'rake/rdoctask'
+  require "rake/rdoctask"
 end
 
-require 'bundler/setup'
+require "bundler/setup"
 Bundler.require(:test)
 
 Rake::TestTask.new do |task|
-  task.libs << 'test'
+  task.libs << "test"
 end
 
 Rake::RDocTask.new do |rd|
-  rd.title = 'wait gem'
+  rd.title = "wait gem"
 end
 
 Gokdok::Dokker.new do |gd|
-  gd.repo_url = 'git@github.com:paperlesspost/wait.git'
-  gd.remote_path = './'
+  gd.repo_url = "git@github.com:paperlesspost/wait.git"
+  gd.remote_path = "./"
 end
 
-desc 'Run tests'
+desc "Run tests"
 task :default => :test
