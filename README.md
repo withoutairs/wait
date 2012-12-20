@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/paperlesspost/wait.png)](http://travis-ci.org/paperlesspost/wait)
+[![Build Status](https://travis-ci.org/paperlesspost/wait.png?branch=master)](https://travis-ci.org/paperlesspost/wait)
 
 ## Description
 
