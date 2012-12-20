@@ -63,7 +63,13 @@
         <h3 class="section-header">Namespace</h3>
         <ul class="link-list">
           
+          <li><span class="type">CLASS</span> <a href="Wait/AttemptCounter.html">Wait::AttemptCounter</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="Wait/ExponentialDelayer.html">Wait::ExponentialDelayer</a></li>
+          
           <li><span class="type">CLASS</span> <a href="Wait/NoResultError.html">Wait::NoResultError</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="Wait/RegularDelayer.html">Wait::RegularDelayer</a></li>
           
           <li><span class="type">CLASS</span> <a href="Wait/TimeoutError.html">Wait::TimeoutError</a></li>
           
@@ -124,7 +130,13 @@
         
           <li><a href="./Wait.html">Wait</a></li>
         
+          <li><a href="./Wait/AttemptCounter.html">Wait::AttemptCounter</a></li>
+        
+          <li><a href="./Wait/ExponentialDelayer.html">Wait::ExponentialDelayer</a></li>
+        
           <li><a href="./Wait/NoResultError.html">Wait::NoResultError</a></li>
+        
+          <li><a href="./Wait/RegularDelayer.html">Wait::RegularDelayer</a></li>
         
           <li><a href="./Wait/TimeoutError.html">Wait::TimeoutError</a></li>
         
@@ -189,10 +201,10 @@
 </dd><dt>:timeout</dt>
 <dd>
 <p>Seconds until the block times out. Default is <tt>15</tt>.</p>
-</dd><dt>:delay</dt>
+</dd><dt>:delayer</dt>
 <dd>
-<p>Initial (grows exponentially) delay (in seconds) to wait in between
-attempts. Default is <tt>1</tt>.</p>
+<p>Delay strategy to use to sleep in between attempts. Default is +<a
+href="Wait/RegularDelayer.html#method-c-new">Wait::RegularDelayer.new</a>+.</p>
 </dd><dt>:rescue</dt>
 <dd>
 <p>One or an array of exceptions to rescue. Default is <tt>nil</tt>.</p>
@@ -205,17 +217,18 @@ attempts. Default is <tt>1</tt>.</p>
             
             <div class="method-source-code" id="new-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 22</span>
+<span class="ruby-comment"># File lib/wait.rb, line 21</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">options</span> = {})
   <span class="ruby-ivar">@attempts</span>   = <span class="ruby-identifier">options</span>[<span class="ruby-value">:attempts</span>] <span class="ruby-operator">||</span> <span class="ruby-value">5</span>
   <span class="ruby-ivar">@timeout</span>    = <span class="ruby-identifier">options</span>[<span class="ruby-value">:timeout</span>]  <span class="ruby-operator">||</span> <span class="ruby-value">15</span>
-  <span class="ruby-ivar">@delay</span>      = <span class="ruby-identifier">options</span>[<span class="ruby-value">:delay</span>]    <span class="ruby-operator">||</span> <span class="ruby-value">1</span>
+  <span class="ruby-ivar">@delayer</span>    = <span class="ruby-identifier">options</span>[<span class="ruby-value">:delayer</span>]  <span class="ruby-operator">||</span> <span class="ruby-constant">RegularDelayer</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@exceptions</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:rescue</span>]
   <span class="ruby-identifier">debug</span>       = <span class="ruby-identifier">options</span>[<span class="ruby-value">:debug</span>]    <span class="ruby-operator">||</span> <span class="ruby-keyword">false</span>
 
-  <span class="ruby-comment"># Prevent accidentally causing an infinite loop.</span>
-  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@attempts</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Fixnum</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@attempts</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
-    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">'invalid number of attempts'</span>
+  <span class="ruby-ivar">@counter</span> = <span class="ruby-constant">AttemptCounter</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@attempts</span>)
+
+  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@delayer</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:sleep</span>)
+    <span class="ruby-identifier">raise</span>(<span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;delay strategy does not respond to sleep message: #{@delayer.inspect}&quot;</span>)
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-ivar">@logger</span> = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">STDOUT</span>)
@@ -282,7 +295,7 @@ wait.until do |attempt|
   case attempt
   when 1 then nil
   when 2 then raise RuntimeError
-  when 3 then 'foo'
+  when 3 then &quot;foo&quot;
   end
 end
 # Rescued exception while waiting: Wait::NoResultError: result was nil
@@ -305,37 +318,35 @@ end
 <pre>
 <span class="ruby-comment"># File lib/wait.rb, line 82</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">until</span>(&amp;<span class="ruby-identifier">block</span>)
-  <span class="ruby-comment"># Initialize the attempt and delay counters.</span>
-  <span class="ruby-identifier">attempt</span> = <span class="ruby-value">0</span>
-  <span class="ruby-identifier">delay</span> = <span class="ruby-ivar">@delay</span>
+  <span class="ruby-comment"># Reset the attempt counter.</span>
+  <span class="ruby-ivar">@counter</span>.<span class="ruby-identifier">reset</span>
 
   <span class="ruby-keyword">begin</span>
-    <span class="ruby-identifier">attempt</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+    <span class="ruby-ivar">@counter</span>.<span class="ruby-identifier">increment</span>
 
     <span class="ruby-identifier">result</span> = <span class="ruby-constant">Timeout</span>.<span class="ruby-identifier">timeout</span>(<span class="ruby-ivar">@timeout</span>, <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">TimeoutError</span>) <span class="ruby-keyword">do</span>
-      <span class="ruby-comment"># Execute the block and pass the attempt counter to it.</span>
-      <span class="ruby-keyword">yield</span> <span class="ruby-identifier">attempt</span>
+      <span class="ruby-comment"># Execute the block and pass the attempt value to it.</span>
+      <span class="ruby-keyword">yield</span>(<span class="ruby-ivar">@counter</span>.<span class="ruby-identifier">attempt</span>)
     <span class="ruby-keyword">end</span>
 
     <span class="ruby-comment"># If there's a result (neither +nil+ or +false+), return the result.</span>
+    <span class="ruby-comment"># Otherwise, raise a +Wait::NoResultError+ exception.</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">result</span>
       <span class="ruby-identifier">result</span>
     <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">raise</span> <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">NoResultError</span>, <span class="ruby-node">&quot;result was #{result.inspect}&quot;</span>
+      <span class="ruby-identifier">raise</span>(<span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">NoResultError</span>, <span class="ruby-node">&quot;result was #{result.inspect}&quot;</span>)
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">TimeoutError</span>, <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">NoResultError</span>, *<span class="ruby-ivar">@exceptions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">exception</span>
-    <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-string">'Rescued exception while waiting: '</span> <span class="ruby-operator">+</span>
-      <span class="ruby-node">&quot;#{exception.class.name}: #{exception.message}&quot;</span>
+    <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Rescued exception while waiting: #{exception.class.name}: #{exception.message}&quot;</span>
     <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-identifier">exception</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;\n&quot;</span>)
 
-    <span class="ruby-comment"># If we've run out of attempts, raise the exception from the last</span>
+    <span class="ruby-comment"># If this was the last attempt, raise the exception from the last</span>
     <span class="ruby-comment"># attempt.</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">attempt</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@attempts</span>
-      <span class="ruby-identifier">raise</span> <span class="ruby-identifier">exception</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@counter</span>.<span class="ruby-identifier">last_attempt?</span>
+      <span class="ruby-identifier">raise</span>(<span class="ruby-identifier">exception</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Attempt #{attempt}/#{@attempts} failed, delaying for #{delay}s&quot;</span>
-      <span class="ruby-identifier">sleep</span> <span class="ruby-identifier">delay</span>
-      <span class="ruby-identifier">delay</span> <span class="ruby-operator">*=</span> <span class="ruby-value">2</span>
+      <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Attempt #{@counter} failed, delaying for #{@delayer}&quot;</span>
+      <span class="ruby-ivar">@delayer</span>.<span class="ruby-identifier">sleep</span>
       <span class="ruby-keyword">retry</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>

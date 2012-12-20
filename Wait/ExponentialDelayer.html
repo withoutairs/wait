@@ -5,7 +5,7 @@
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 
-  <title>Class: WaitTest::TestErrorBar</title>
+  <title>Class: Wait::ExponentialDelayer</title>
 
   <link rel="stylesheet" href="../rdoc.css" type="text/css" media="screen" />
 
@@ -34,8 +34,8 @@
         <div class="section-body">
           <ul>
           
-            <li><a href="../test/test_wait_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
-              class="thickbox" title="test/test_wait.rb">test/test_wait.rb</a></li>
+            <li><a href="../lib/wait_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/wait.rb">lib/wait.rb</a></li>
           
           </ul>
         </div>
@@ -50,7 +50,7 @@
       <div id="parent-class-section" class="section">
         <h3 class="section-header">Parent</h3>
         
-        <p class="link">StandardError</p>
+        <p class="link"><a href="RegularDelayer.html">Wait::RegularDelayer</a></p>
         
       </div>
       
@@ -59,6 +59,18 @@
 
       
 
+      
+      <!-- Method Quickref -->
+      <div id="method-list-section" class="section">
+        <h3 class="section-header">Methods</h3>
+        <ul class="link-list">
+          
+          <li><a href="#method-i-increment">#increment</a></li>
+          
+          <li><a href="#method-i-sleep">#sleep</a></li>
+          
+        </ul>
+      </div>
       
 
       
@@ -125,12 +137,10 @@
   </div>
 
   <div id="documentation">
-    <h1 class="class">WaitTest::TestErrorBar</h1>
+    <h1 class="class">Wait::ExponentialDelayer</h1>
 
     <div id="description" class="description">
       
-<p>An exception used for testing (2/2).</p>
-
     </div><!-- description -->
 
     
@@ -147,6 +157,79 @@
 
       <!-- Methods -->
       
+      <div id="public-instance-method-details" class="method-section section">
+        <h3 class="section-header">Public Instance Methods</h3>
+
+      
+        <div id="increment-method" class="method-detail ">
+          <a name="method-i-increment"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">increment</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="increment-source">
+<pre>
+<span class="ruby-comment"># File lib/wait.rb, line 143</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">increment</span>
+  <span class="ruby-ivar">@delay</span> <span class="ruby-operator">*=</span> <span class="ruby-value">2</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- increment-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- increment-method -->
+
+      
+        <div id="sleep-method" class="method-detail ">
+          <a name="method-i-sleep"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">sleep</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="sleep-source">
+<pre>
+<span class="ruby-comment"># File lib/wait.rb, line 138</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">sleep</span>
+  <span class="ruby-keyword">super</span>
+  <span class="ruby-identifier">increment</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- sleep-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- sleep-method -->
+
+      
+      </div><!-- public-instance-method-details -->
+    
     </div><!-- 5Buntitled-5D -->
   
 

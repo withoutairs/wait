@@ -46,7 +46,13 @@
     
     <li class="class"><a href="Wait.html">Wait</a></li>
     
+    <li class="class"><a href="Wait/AttemptCounter.html">Wait::AttemptCounter</a></li>
+    
+    <li class="class"><a href="Wait/ExponentialDelayer.html">Wait::ExponentialDelayer</a></li>
+    
     <li class="class"><a href="Wait/NoResultError.html">Wait::NoResultError</a></li>
+    
+    <li class="class"><a href="Wait/RegularDelayer.html">Wait::RegularDelayer</a></li>
     
     <li class="class"><a href="Wait/TimeoutError.html">Wait::TimeoutError</a></li>
     
@@ -63,7 +69,25 @@
     
       <li><a href="Wait.html#method-c-new">::new &mdash; Wait</a></li>
     
-      <li><a href="WaitTest.html#method-i-test_delays">#test_delays &mdash; WaitTest</a></li>
+      <li><a href="Wait/AttemptCounter.html#method-c-new">::new &mdash; Wait::AttemptCounter</a></li>
+    
+      <li><a href="Wait/RegularDelayer.html#method-c-new">::new &mdash; Wait::RegularDelayer</a></li>
+    
+      <li><a href="Wait/ExponentialDelayer.html#method-i-increment">#increment &mdash; Wait::ExponentialDelayer</a></li>
+    
+      <li><a href="Wait/AttemptCounter.html#method-i-increment">#increment &mdash; Wait::AttemptCounter</a></li>
+    
+      <li><a href="Wait/AttemptCounter.html#method-i-last_attempt-3F">#last_attempt? &mdash; Wait::AttemptCounter</a></li>
+    
+      <li><a href="Wait/AttemptCounter.html#method-i-reset">#reset &mdash; Wait::AttemptCounter</a></li>
+    
+      <li><a href="Wait/RegularDelayer.html#method-i-sleep">#sleep &mdash; Wait::RegularDelayer</a></li>
+    
+      <li><a href="Wait/ExponentialDelayer.html#method-i-sleep">#sleep &mdash; Wait::ExponentialDelayer</a></li>
+    
+      <li><a href="WaitTest.html#method-i-test_exponential_delayer">#test_exponential_delayer &mdash; WaitTest</a></li>
+    
+      <li><a href="WaitTest.html#method-i-test_invalid_delay_strategy">#test_invalid_delay_strategy &mdash; WaitTest</a></li>
     
       <li><a href="WaitTest.html#method-i-test_invalid_number_of_attempts">#test_invalid_number_of_attempts &mdash; WaitTest</a></li>
     
@@ -75,6 +99,8 @@
     
       <li><a href="WaitTest.html#method-i-test_raising_timeout">#test_raising_timeout &mdash; WaitTest</a></li>
     
+      <li><a href="WaitTest.html#method-i-test_regular_delayer">#test_regular_delayer &mdash; WaitTest</a></li>
+    
       <li><a href="WaitTest.html#method-i-test_rescuing_exception_specified_by_rescue_option">#test_rescuing_exception_specified_by_rescue_option &mdash; WaitTest</a></li>
     
       <li><a href="WaitTest.html#method-i-test_rescuing_false_result">#test_rescuing_false_result &mdash; WaitTest</a></li>
@@ -84,6 +110,10 @@
       <li><a href="WaitTest.html#method-i-test_rescuing_timeout">#test_rescuing_timeout &mdash; WaitTest</a></li>
     
       <li><a href="WaitTest.html#method-i-test_result">#test_result &mdash; WaitTest</a></li>
+    
+      <li><a href="Wait/AttemptCounter.html#method-i-to_s">#to_s &mdash; Wait::AttemptCounter</a></li>
+    
+      <li><a href="Wait/RegularDelayer.html#method-i-to_s">#to_s &mdash; Wait::RegularDelayer</a></li>
     
       <li><a href="Wait.html#method-i-until">#until &mdash; Wait</a></li>
     

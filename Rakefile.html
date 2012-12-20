@@ -68,7 +68,13 @@
         
           <li><a href="./Wait.html">Wait</a></li>
         
+          <li><a href="./Wait/AttemptCounter.html">Wait::AttemptCounter</a></li>
+        
+          <li><a href="./Wait/ExponentialDelayer.html">Wait::ExponentialDelayer</a></li>
+        
           <li><a href="./Wait/NoResultError.html">Wait::NoResultError</a></li>
+        
+          <li><a href="./Wait/RegularDelayer.html">Wait::RegularDelayer</a></li>
         
           <li><a href="./Wait/TimeoutError.html">Wait::TimeoutError</a></li>
         
@@ -88,41 +94,41 @@
 
   <div id="documentation">
     
-<p>require ‘rake/testtask’</p>
+<p>require “rake/testtask”</p>
 
 <p># RDocTask is deprecated, but RDoc::Task is not available in Ruby 1.8.7.
 begin</p>
 
-<pre>require 'rdoc/task'</pre>
+<pre>require &quot;rdoc/task&quot;</pre>
 
 <p>rescue LoadError</p>
 
-<pre>require 'rake/rdoctask'</pre>
+<pre>require &quot;rake/rdoctask&quot;</pre>
 
 <p>end</p>
 
-<p>require ‘bundler/setup’ Bundler.require(:test)</p>
+<p>require “bundler/setup” Bundler.require(:test)</p>
 
 <p>Rake::TestTask.new do |task|</p>
 
-<pre>task.libs &lt;&lt; 'test'</pre>
+<pre>task.libs &lt;&lt; &quot;test&quot;</pre>
 
 <p>end</p>
 
 <p>Rake::RDocTask.new do |rd|</p>
 
-<pre>rd.title = 'wait gem'</pre>
+<pre>rd.title = &quot;wait gem&quot;</pre>
 
 <p>end</p>
 
 <p>Gokdok::Dokker.new do |gd|</p>
 
-<pre>gd.repo_url = 'git@github.com:foursquare/wait.git'
-gd.remote_path = './'</pre>
+<pre>gd.repo_url = &quot;git@github.com:paperlesspost/wait.git&quot;
+gd.remote_path = &quot;./&quot;</pre>
 
 <p>end</p>
 
-<p>desc ‘Run tests’ task :default =&gt; :test</p>
+<p>desc “Run tests” task :default =&gt; :test</p>
 
   </div>
 
