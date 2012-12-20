@@ -1,3 +1,4 @@
 test/reports
 .gh_pages
 html
+*.gem
