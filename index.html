@@ -56,6 +56,10 @@
     
     <li class="class"><a href="Wait/TimeoutError.html">Wait::TimeoutError</a></li>
     
+    <li class="class"><a href="Wait/TruthyTester.html">Wait::TruthyTester</a></li>
+    
+    <li class="class"><a href="Wait/TruthyTester/ResultNotTruthy.html">Wait::TruthyTester::ResultNotTruthy</a></li>
+    
     <li class="class"><a href="WaitTest.html">WaitTest</a></li>
     
     <li class="class"><a href="WaitTest/TestErrorBar.html">WaitTest::TestErrorBar</a></li>
@@ -67,23 +71,29 @@
   <h2 id="methods">Methods</h2>
   <ul>
     
+      <li><a href="Wait/TruthyTester.html#method-c-exceptions">::exceptions &mdash; Wait::TruthyTester</a></li>
+    
       <li><a href="Wait.html#method-c-new">::new &mdash; Wait</a></li>
     
-      <li><a href="Wait/AttemptCounter.html#method-c-new">::new &mdash; Wait::AttemptCounter</a></li>
+      <li><a href="Wait/TruthyTester.html#method-c-new">::new &mdash; Wait::TruthyTester</a></li>
     
       <li><a href="Wait/RegularDelayer.html#method-c-new">::new &mdash; Wait::RegularDelayer</a></li>
     
-      <li><a href="Wait/ExponentialDelayer.html#method-i-increment">#increment &mdash; Wait::ExponentialDelayer</a></li>
+      <li><a href="Wait/AttemptCounter.html#method-c-new">::new &mdash; Wait::AttemptCounter</a></li>
     
       <li><a href="Wait/AttemptCounter.html#method-i-increment">#increment &mdash; Wait::AttemptCounter</a></li>
     
+      <li><a href="Wait/ExponentialDelayer.html#method-i-increment">#increment &mdash; Wait::ExponentialDelayer</a></li>
+    
       <li><a href="Wait/AttemptCounter.html#method-i-last_attempt-3F">#last_attempt? &mdash; Wait::AttemptCounter</a></li>
+    
+      <li><a href="Wait/TruthyTester.html#method-i-raise_unless_valid">#raise_unless_valid &mdash; Wait::TruthyTester</a></li>
     
       <li><a href="Wait/AttemptCounter.html#method-i-reset">#reset &mdash; Wait::AttemptCounter</a></li>
     
-      <li><a href="Wait/RegularDelayer.html#method-i-sleep">#sleep &mdash; Wait::RegularDelayer</a></li>
-    
       <li><a href="Wait/ExponentialDelayer.html#method-i-sleep">#sleep &mdash; Wait::ExponentialDelayer</a></li>
+    
+      <li><a href="Wait/RegularDelayer.html#method-i-sleep">#sleep &mdash; Wait::RegularDelayer</a></li>
     
       <li><a href="WaitTest.html#method-i-test_exponential_delayer">#test_exponential_delayer &mdash; WaitTest</a></li>
     
@@ -91,9 +101,11 @@
     
       <li><a href="WaitTest.html#method-i-test_invalid_number_of_attempts">#test_invalid_number_of_attempts &mdash; WaitTest</a></li>
     
+      <li><a href="WaitTest.html#method-i-test_invalid_tester_strategy">#test_invalid_tester_strategy &mdash; WaitTest</a></li>
+    
       <li><a href="WaitTest.html#method-i-test_not_rescuing_exception_not_specified_by_rescue_option">#test_not_rescuing_exception_not_specified_by_rescue_option &mdash; WaitTest</a></li>
     
-      <li><a href="WaitTest.html#method-i-test_raising_no_result">#test_raising_no_result &mdash; WaitTest</a></li>
+      <li><a href="WaitTest.html#method-i-test_raising_non_truthy_result">#test_raising_non_truthy_result &mdash; WaitTest</a></li>
     
       <li><a href="WaitTest.html#method-i-test_raising_other">#test_raising_other &mdash; WaitTest</a></li>
     
@@ -111,11 +123,15 @@
     
       <li><a href="WaitTest.html#method-i-test_result">#test_result &mdash; WaitTest</a></li>
     
-      <li><a href="Wait/AttemptCounter.html#method-i-to_s">#to_s &mdash; Wait::AttemptCounter</a></li>
-    
       <li><a href="Wait/RegularDelayer.html#method-i-to_s">#to_s &mdash; Wait::RegularDelayer</a></li>
     
+      <li><a href="Wait/AttemptCounter.html#method-i-to_s">#to_s &mdash; Wait::AttemptCounter</a></li>
+    
       <li><a href="Wait.html#method-i-until">#until &mdash; Wait</a></li>
+    
+      <li><a href="Wait/TruthyTester.html#method-i-valid-3F">#valid? &mdash; Wait::TruthyTester</a></li>
+    
+      <li><a href="Wait.html#method-i-validate_strategies">#validate_strategies &mdash; Wait</a></li>
     
   </ul>
 

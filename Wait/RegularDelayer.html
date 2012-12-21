@@ -124,6 +124,10 @@
         
           <li><a href="../Wait/TimeoutError.html">Wait::TimeoutError</a></li>
         
+          <li><a href="../Wait/TruthyTester.html">Wait::TruthyTester</a></li>
+        
+          <li><a href="../Wait/TruthyTester/ResultNotTruthy.html">Wait::TruthyTester::ResultNotTruthy</a></li>
+        
           <li><a href="../WaitTest.html">WaitTest</a></li>
         
           <li><a href="../WaitTest/TestErrorBar.html">WaitTest::TestErrorBar</a></li>
@@ -182,7 +186,7 @@
             
             <div class="method-source-code" id="new-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 124</span>
+<span class="ruby-comment"># File lib/wait.rb, line 134</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">initial_delay</span> = <span class="ruby-value">1</span>)
   <span class="ruby-ivar">@delay</span> = <span class="ruby-identifier">initial_delay</span>
 <span class="ruby-keyword">end</span></pre>
@@ -221,7 +225,7 @@
             
             <div class="method-source-code" id="sleep-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 128</span>
+<span class="ruby-comment"># File lib/wait.rb, line 138</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">sleep</span>
   <span class="ruby-constant">Kernel</span>.<span class="ruby-identifier">sleep</span>(<span class="ruby-ivar">@delay</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -254,7 +258,7 @@
             
             <div class="method-source-code" id="to_s-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 132</span>
+<span class="ruby-comment"># File lib/wait.rb, line 142</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
   <span class="ruby-node">&quot;#{@delay}s&quot;</span>
 <span class="ruby-keyword">end</span></pre>

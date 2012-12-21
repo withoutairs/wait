@@ -5,7 +5,7 @@
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 
-  <title>Class: Wait::AttemptCounter</title>
+  <title>Class: Wait::TruthyTester</title>
 
   <link rel="stylesheet" href="../rdoc.css" type="text/css" media="screen" />
 
@@ -58,6 +58,16 @@
       
 
       
+      <!-- Namespace Contents -->
+      <div id="namespace-list-section" class="section">
+        <h3 class="section-header">Namespace</h3>
+        <ul class="link-list">
+          
+          <li><span class="type">CLASS</span> <a href="TruthyTester/ResultNotTruthy.html">Wait::TruthyTester::ResultNotTruthy</a></li>
+          
+        </ul>
+      </div>
+      
 
       
       <!-- Method Quickref -->
@@ -65,15 +75,13 @@
         <h3 class="section-header">Methods</h3>
         <ul class="link-list">
           
+          <li><a href="#method-c-exceptions">::exceptions</a></li>
+          
           <li><a href="#method-c-new">::new</a></li>
           
-          <li><a href="#method-i-increment">#increment</a></li>
+          <li><a href="#method-i-raise_unless_valid">#raise_unless_valid</a></li>
           
-          <li><a href="#method-i-last_attempt-3F">#last_attempt?</a></li>
-          
-          <li><a href="#method-i-reset">#reset</a></li>
-          
-          <li><a href="#method-i-to_s">#to_s</a></li>
+          <li><a href="#method-i-valid-3F">#valid?</a></li>
           
         </ul>
       </div>
@@ -147,7 +155,7 @@
   </div>
 
   <div id="documentation">
-    <h1 class="class">Wait::AttemptCounter</h1>
+    <h1 class="class">Wait::TruthyTester</h1>
 
     <div id="description" class="description">
       
@@ -164,33 +172,44 @@
       
 
       
-      <!-- Attributes -->
-      <div id="attribute-method-details" class="method-section section">
-        <h3 class="section-header">Attributes</h3>
-
-        
-        <div id="attempt-attribute-method" class="method-detail">
-          <a name="attempt"></a>
-          
-          <div class="method-heading attribute-method-heading">
-            <span class="method-name">attempt</span><span
-              class="attribute-access-type">[R]</span>
-          </div>
-
-          <div class="method-description">
-          
-          
-          
-          </div>
-        </div>
-        
-      </div><!-- attribute-method-details -->
-      
 
       <!-- Methods -->
       
       <div id="public-class-method-details" class="method-section section">
         <h3 class="section-header">Public Class Methods</h3>
+
+      
+        <div id="exceptions-method" class="method-detail ">
+          <a name="method-c-exceptions"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">exceptions</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="exceptions-source">
+<pre>
+<span class="ruby-comment"># File lib/wait.rb, line 191</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">exceptions</span>
+  [<span class="ruby-constant">ResultNotTruthy</span>]
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- exceptions-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- exceptions-method -->
 
       
         <div id="new-method" class="method-detail ">
@@ -199,7 +218,7 @@
           
           <div class="method-heading">
             <span class="method-name">new</span><span
-              class="method-args">(total)</span>
+              class="method-args">(result = nil)</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
           
@@ -212,15 +231,9 @@
             
             <div class="method-source-code" id="new-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 161</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">total</span>)
-  <span class="ruby-comment"># Prevent accidentally causing an infinite loop.</span>
-  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">total</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Fixnum</span>) <span class="ruby-keyword">and</span> <span class="ruby-identifier">total</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
-    <span class="ruby-identifier">raise</span>(<span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;invalid number of attempts: #{total.inspect}&quot;</span>)
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-ivar">@total</span> = <span class="ruby-identifier">total</span>
-  <span class="ruby-identifier">reset</span>
+<span class="ruby-comment"># File lib/wait.rb, line 195</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">result</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-ivar">@result</span> = <span class="ruby-identifier">result</span>
 <span class="ruby-keyword">end</span></pre>
             </div><!-- new-source -->
             
@@ -238,12 +251,12 @@
         <h3 class="section-header">Public Instance Methods</h3>
 
       
-        <div id="increment-method" class="method-detail ">
-          <a name="method-i-increment"></a>
+        <div id="raise_unless_valid-method" class="method-detail ">
+          <a name="method-i-raise_unless_valid"></a>
 
           
           <div class="method-heading">
-            <span class="method-name">increment</span><span
+            <span class="method-name">raise_unless_valid</span><span
               class="method-args">()</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
@@ -255,28 +268,28 @@
             
 
             
-            <div class="method-source-code" id="increment-source">
+            <div class="method-source-code" id="raise_unless_valid-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 175</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">increment</span>
-  <span class="ruby-ivar">@attempt</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+<span class="ruby-comment"># File lib/wait.rb, line 199</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">raise_unless_valid</span>
+  <span class="ruby-identifier">valid?</span> <span class="ruby-operator">?</span> <span class="ruby-ivar">@result</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">raise</span>(<span class="ruby-constant">ResultNotTruthy</span>, <span class="ruby-ivar">@result</span>.<span class="ruby-identifier">inspect</span>)
 <span class="ruby-keyword">end</span></pre>
-            </div><!-- increment-source -->
+            </div><!-- raise_unless_valid-source -->
             
           </div>
 
           
 
           
-        </div><!-- increment-method -->
+        </div><!-- raise_unless_valid-method -->
 
       
-        <div id="last_attempt-3F-method" class="method-detail ">
-          <a name="method-i-last_attempt-3F"></a>
+        <div id="valid-3F-method" class="method-detail ">
+          <a name="method-i-valid-3F"></a>
 
           
           <div class="method-heading">
-            <span class="method-name">last_attempt?</span><span
+            <span class="method-name">valid?</span><span
               class="method-args">()</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
@@ -288,86 +301,20 @@
             
 
             
-            <div class="method-source-code" id="last_attempt-3F-source">
+            <div class="method-source-code" id="valid-3F-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 179</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">last_attempt?</span>
-  <span class="ruby-ivar">@attempt</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@total</span>
+<span class="ruby-comment"># File lib/wait.rb, line 203</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">valid?</span>
+  <span class="ruby-keyword">not</span> (<span class="ruby-ivar">@result</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">or</span> <span class="ruby-ivar">@result</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>)
 <span class="ruby-keyword">end</span></pre>
-            </div><!-- last_attempt-3F-source -->
+            </div><!-- valid-3F-source -->
             
           </div>
 
           
 
           
-        </div><!-- last_attempt-3F-method -->
-
-      
-        <div id="reset-method" class="method-detail ">
-          <a name="method-i-reset"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">reset</span><span
-              class="method-args">()</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            
-            
-
-            
-            <div class="method-source-code" id="reset-source">
-<pre>
-<span class="ruby-comment"># File lib/wait.rb, line 171</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">reset</span>
-  <span class="ruby-ivar">@attempt</span> = <span class="ruby-value">0</span>
-<span class="ruby-keyword">end</span></pre>
-            </div><!-- reset-source -->
-            
-          </div>
-
-          
-
-          
-        </div><!-- reset-method -->
-
-      
-        <div id="to_s-method" class="method-detail ">
-          <a name="method-i-to_s"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">to_s</span><span
-              class="method-args">()</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            
-            
-
-            
-            <div class="method-source-code" id="to_s-source">
-<pre>
-<span class="ruby-comment"># File lib/wait.rb, line 183</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
-  [<span class="ruby-ivar">@attempt</span>, <span class="ruby-ivar">@total</span>].<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;/&quot;</span>)
-<span class="ruby-keyword">end</span></pre>
-            </div><!-- to_s-source -->
-            
-          </div>
-
-          
-
-          
-        </div><!-- to_s-method -->
+        </div><!-- valid-3F-method -->
 
       
       </div><!-- public-instance-method-details -->

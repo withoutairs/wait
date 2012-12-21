@@ -83,9 +83,11 @@
           
           <li><a href="#method-i-test_invalid_number_of_attempts">#test_invalid_number_of_attempts</a></li>
           
+          <li><a href="#method-i-test_invalid_tester_strategy">#test_invalid_tester_strategy</a></li>
+          
           <li><a href="#method-i-test_not_rescuing_exception_not_specified_by_rescue_option">#test_not_rescuing_exception_not_specified_by_rescue_option</a></li>
           
-          <li><a href="#method-i-test_raising_no_result">#test_raising_no_result</a></li>
+          <li><a href="#method-i-test_raising_non_truthy_result">#test_raising_non_truthy_result</a></li>
           
           <li><a href="#method-i-test_raising_other">#test_raising_other</a></li>
           
@@ -155,6 +157,10 @@
           <li><a href="./Wait/RegularDelayer.html">Wait::RegularDelayer</a></li>
         
           <li><a href="./Wait/TimeoutError.html">Wait::TimeoutError</a></li>
+        
+          <li><a href="./Wait/TruthyTester.html">Wait::TruthyTester</a></li>
+        
+          <li><a href="./Wait/TruthyTester/ResultNotTruthy.html">Wait::TruthyTester::ResultNotTruthy</a></li>
         
           <li><a href="./WaitTest.html">WaitTest</a></li>
         
@@ -349,6 +355,47 @@ performed here to prevent accidentally causing an infinite loop.</p>
         </div><!-- test_invalid_number_of_attempts-method -->
 
       
+        <div id="test_invalid_tester_strategy-method" class="method-detail ">
+          <a name="method-i-test_invalid_tester_strategy"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">test_invalid_tester_strategy</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Test a couple combinations of invalid tester strategy objects.</p>
+            
+
+            
+            <div class="method-source-code" id="test_invalid_tester_strategy-source">
+<pre>
+<span class="ruby-comment"># File test/test_wait.rb, line 204</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_invalid_tester_strategy</span>
+  <span class="ruby-identifier">assert_raise</span> <span class="ruby-constant">ArgumentError</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-comment"># The tester passed must be a class, not an instance.</span>
+    <span class="ruby-constant">Wait</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:tester</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">TruthyTester</span>.<span class="ruby-identifier">new</span>).<span class="ruby-identifier">until</span> { }
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">assert_raise</span> <span class="ruby-constant">ArgumentError</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-comment"># The tester, at the very least, must respond to the valid? method.</span>
+    <span class="ruby-constant">Wait</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:delayer</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">String</span>.<span class="ruby-identifier">new</span>).<span class="ruby-identifier">until</span> { }
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- test_invalid_tester_strategy-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- test_invalid_tester_strategy-method -->
+
+      
         <div id="test_not_rescuing_exception_not_specified_by_rescue_option-method" class="method-detail ">
           <a name="method-i-test_not_rescuing_exception_not_specified_by_rescue_option"></a>
 
@@ -393,12 +440,12 @@ performed here to prevent accidentally causing an infinite loop.</p>
         </div><!-- test_not_rescuing_exception_not_specified_by_rescue_option-method -->
 
       
-        <div id="test_raising_no_result-method" class="method-detail ">
-          <a name="method-i-test_raising_no_result"></a>
+        <div id="test_raising_non_truthy_result-method" class="method-detail ">
+          <a name="method-i-test_raising_non_truthy_result"></a>
 
           
           <div class="method-heading">
-            <span class="method-name">test_raising_no_result</span><span
+            <span class="method-name">test_raising_non_truthy_result</span><span
               class="method-args">()</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
@@ -406,29 +453,30 @@ performed here to prevent accidentally causing an infinite loop.</p>
 
           <div class="method-description">
             
-            <p>Test that <a href="Wait/NoResultError.html">Wait::NoResultError</a> is
-raised when the last attempt returns no result.</p>
+            <p>Test that <a
+href="Wait/TruthyTester/ResultNotTruthy.html">Wait::TruthyTester::ResultNotTruthy</a>
+is raised when the last attempt returns a non-truthy result.</p>
             
 
             
-            <div class="method-source-code" id="test_raising_no_result-source">
+            <div class="method-source-code" id="test_raising_non_truthy_result-source">
 <pre>
 <span class="ruby-comment"># File test/test_wait.rb, line 24</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_raising_no_result</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">test_raising_non_truthy_result</span>
   <span class="ruby-identifier">options</span> = {<span class="ruby-value">:delayer</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">DELAYER</span>, <span class="ruby-value">:attempts</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>}
   <span class="ruby-identifier">wait</span> = <span class="ruby-constant">Wait</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>)
-  <span class="ruby-identifier">assert_raise</span> <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">NoResultError</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">assert_raise</span> <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">TruthyTester</span><span class="ruby-operator">::</span><span class="ruby-constant">ResultNotTruthy</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">wait</span>.<span class="ruby-identifier">until</span> { <span class="ruby-keyword">nil</span> }
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
-            </div><!-- test_raising_no_result-source -->
+            </div><!-- test_raising_non_truthy_result-source -->
             
           </div>
 
           
 
           
-        </div><!-- test_raising_no_result-method -->
+        </div><!-- test_raising_non_truthy_result-method -->
 
       
         <div id="test_raising_other-method" class="method-detail ">

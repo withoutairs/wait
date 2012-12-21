@@ -73,6 +73,8 @@
           
           <li><span class="type">CLASS</span> <a href="Wait/TimeoutError.html">Wait::TimeoutError</a></li>
           
+          <li><span class="type">CLASS</span> <a href="Wait/TruthyTester.html">Wait::TruthyTester</a></li>
+          
         </ul>
       </div>
       
@@ -86,6 +88,8 @@
           <li><a href="#method-c-new">::new</a></li>
           
           <li><a href="#method-i-until">#until</a></li>
+          
+          <li><a href="#method-i-validate_strategies">#validate_strategies</a></li>
           
         </ul>
       </div>
@@ -139,6 +143,10 @@
           <li><a href="./Wait/RegularDelayer.html">Wait::RegularDelayer</a></li>
         
           <li><a href="./Wait/TimeoutError.html">Wait::TimeoutError</a></li>
+        
+          <li><a href="./Wait/TruthyTester.html">Wait::TruthyTester</a></li>
+        
+          <li><a href="./Wait/TruthyTester/ResultNotTruthy.html">Wait::TruthyTester::ResultNotTruthy</a></li>
         
           <li><a href="./WaitTest.html">WaitTest</a></li>
         
@@ -211,28 +219,29 @@ href="Wait/RegularDelayer.html#method-c-new">Wait::RegularDelayer.new</a>+.</p>
 </dd><dt>:debug</dt>
 <dd>
 <p>If <tt>true</tt>, logs debugging output. Default is <tt>false</tt>.</p>
+</dd><dt>:tester</dt>
+<dd>
+<p>Strategy to use to test the result. Default is +Wait::TruthyTester+.</p>
 </dd></dl>
             
 
             
             <div class="method-source-code" id="new-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 21</span>
+<span class="ruby-comment"># File lib/wait.rb, line 23</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">options</span> = {})
   <span class="ruby-ivar">@attempts</span>   = <span class="ruby-identifier">options</span>[<span class="ruby-value">:attempts</span>] <span class="ruby-operator">||</span> <span class="ruby-value">5</span>
   <span class="ruby-ivar">@timeout</span>    = <span class="ruby-identifier">options</span>[<span class="ruby-value">:timeout</span>]  <span class="ruby-operator">||</span> <span class="ruby-value">15</span>
   <span class="ruby-ivar">@delayer</span>    = <span class="ruby-identifier">options</span>[<span class="ruby-value">:delayer</span>]  <span class="ruby-operator">||</span> <span class="ruby-constant">RegularDelayer</span>.<span class="ruby-identifier">new</span>
-  <span class="ruby-ivar">@exceptions</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:rescue</span>]
+  <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">Array</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:rescue</span>])
   <span class="ruby-identifier">debug</span>       = <span class="ruby-identifier">options</span>[<span class="ruby-value">:debug</span>]    <span class="ruby-operator">||</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-ivar">@tester</span>     = <span class="ruby-identifier">options</span>[<span class="ruby-value">:tester</span>]   <span class="ruby-operator">||</span> <span class="ruby-constant">TruthyTester</span>
 
   <span class="ruby-ivar">@counter</span> = <span class="ruby-constant">AttemptCounter</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@attempts</span>)
-
-  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@delayer</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:sleep</span>)
-    <span class="ruby-identifier">raise</span>(<span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;delay strategy does not respond to sleep message: #{@delayer.inspect}&quot;</span>)
-  <span class="ruby-keyword">end</span>
-
   <span class="ruby-ivar">@logger</span> = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">STDOUT</span>)
   <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">level</span> = <span class="ruby-identifier">debug</span> <span class="ruby-operator">?</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">DEBUG</span> <span class="ruby-operator">:</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">WARN</span>
+
+  <span class="ruby-identifier">validate_strategies</span>
 <span class="ruby-keyword">end</span></pre>
             </div><!-- new-source -->
             
@@ -266,7 +275,8 @@ href="Wait/RegularDelayer.html#method-c-new">Wait::RegularDelayer.new</a>+.</p>
             <h2>Description</h2>
 
 <p><a href="Wait.html#method-i-until">Wait#until</a> executes a block until
-there's a result. Useful for blocking script execution until:</p>
+there's a valid (by default, truthy) result. Useful for blocking script
+execution until:</p>
 <ul><li>
 <p>an HTTP request was successful</p>
 </li><li>
@@ -282,7 +292,7 @@ there's a result. Useful for blocking script execution until:</p>
 <pre>wait = Wait.new
 # =&gt; #&lt;Wait&gt;
 wait.until { Time.now.sec.even? }
-# Rescued exception while waiting: Wait::NoResultError: result was false
+# Rescued exception while waiting: Wait::TruthyTester::ResultNotTruthy: false
 # Attempt 1/5 failed, delaying for 1s
 # =&gt; true</pre>
 
@@ -298,7 +308,7 @@ wait.until do |attempt|
   when 3 then &quot;foo&quot;
   end
 end
-# Rescued exception while waiting: Wait::NoResultError: result was nil
+# Rescued exception while waiting: Wait::TruthyTester::ResultNotTruthy: nil
 # Attempt 1/5 failed, delaying for 1s
 # Rescued exception while waiting: RuntimeError: RuntimeError
 # Attempt 2/5 failed, delaying for 2s
@@ -306,17 +316,17 @@ end
 
 <h2>Returns</h2>
 
-<p>The result of the block if not <tt>nil</tt> or <tt>false</tt>.</p>
+<p>The result of the block if valid (by default, truthy).</p>
 
 <h2>Raises</h2>
 
-<p>The exception from the last attempt made.</p>
+<p>If no results are valid, the exception from the last attempt made.</p>
             
 
             
             <div class="method-source-code" id="until-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 82</span>
+<span class="ruby-comment"># File lib/wait.rb, line 97</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">until</span>(&amp;<span class="ruby-identifier">block</span>)
   <span class="ruby-comment"># Reset the attempt counter.</span>
   <span class="ruby-ivar">@counter</span>.<span class="ruby-identifier">reset</span>
@@ -325,18 +335,13 @@ end
     <span class="ruby-ivar">@counter</span>.<span class="ruby-identifier">increment</span>
 
     <span class="ruby-identifier">result</span> = <span class="ruby-constant">Timeout</span>.<span class="ruby-identifier">timeout</span>(<span class="ruby-ivar">@timeout</span>, <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">TimeoutError</span>) <span class="ruby-keyword">do</span>
-      <span class="ruby-comment"># Execute the block and pass the attempt value to it.</span>
+      <span class="ruby-comment"># Execute the block and pass the attempt count to it.</span>
       <span class="ruby-keyword">yield</span>(<span class="ruby-ivar">@counter</span>.<span class="ruby-identifier">attempt</span>)
     <span class="ruby-keyword">end</span>
 
-    <span class="ruby-comment"># If there's a result (neither +nil+ or +false+), return the result.</span>
-    <span class="ruby-comment"># Otherwise, raise a +Wait::NoResultError+ exception.</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">result</span>
-      <span class="ruby-identifier">result</span>
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">raise</span>(<span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">NoResultError</span>, <span class="ruby-node">&quot;result was #{result.inspect}&quot;</span>)
-    <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">TimeoutError</span>, <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">NoResultError</span>, *<span class="ruby-ivar">@exceptions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">exception</span>
+    <span class="ruby-identifier">tester</span> = <span class="ruby-ivar">@tester</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">result</span>)
+    <span class="ruby-identifier">tester</span>.<span class="ruby-identifier">raise_unless_valid</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">TimeoutError</span>, *(<span class="ruby-ivar">@tester</span>.<span class="ruby-identifier">exceptions</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@exceptions</span>) =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">exception</span>
     <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Rescued exception while waiting: #{exception.class.name}: #{exception.message}&quot;</span>
     <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-identifier">exception</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;\n&quot;</span>)
 
@@ -359,6 +364,49 @@ end
 
           
         </div><!-- until-method -->
+
+      
+        <div id="validate_strategies-method" class="method-detail ">
+          <a name="method-i-validate_strategies"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">validate_strategies</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Validates all of the assigned strategy objects.</p>
+            
+
+            
+            <div class="method-source-code" id="validate_strategies-source">
+<pre>
+<span class="ruby-comment"># File lib/wait.rb, line 39</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">validate_strategies</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@delayer</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:sleep</span>)
+    <span class="ruby-identifier">raise</span>(<span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;delay strategy does not respond to sleep message: #{@delayer.inspect}&quot;</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@tester</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:new</span>)
+    <span class="ruby-identifier">raise</span>(<span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;tester strategy does not respond to new message: #{@tester.inspect}&quot;</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@tester</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:valid?</span>)
+    <span class="ruby-identifier">raise</span>(<span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;tester strategy does not respond to valid? message: #{@tester.inspect}&quot;</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- validate_strategies-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- validate_strategies-method -->
 
       
       </div><!-- public-instance-method-details -->
