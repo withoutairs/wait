@@ -24,7 +24,7 @@ class Wait
     @attempts   = options[:attempts] || 5
     @timeout    = options[:timeout]  || 15
     @delayer    = options[:delayer]  || RegularDelayer.new
-    @exceptions = options[:rescue]
+    @exceptions = Array(options[:rescue])
     debug       = options[:debug]    || false
     @tester     = options[:tester]   || TruthyTester
 
@@ -108,7 +108,7 @@ class Wait
 
       tester = @tester.new(result)
       tester.raise_unless_valid
-    rescue Wait::TimeoutError, *@tester.exceptions, *@exceptions => exception
+    rescue Wait::TimeoutError, *(@tester.exceptions + @exceptions) => exception
       @logger.debug "Rescued exception while waiting: #{exception.class.name}: #{exception.message}"
       @logger.debug exception.backtrace.join("\n")
 
