@@ -2,7 +2,7 @@
 
 ## Description
 
-The wait gem executes a block until there's a result. Useful for blocking script execution until:
+The wait gem executes a block until there's a valid (by default, truthy) result. Useful for blocking script execution until:
 * an HTTP request was successful
 * a port has opened
 * an external process has started
@@ -22,7 +22,7 @@ gem "wait", :git => "git@github.com:paperlesspost/wait.git"
 wait = Wait.new
 # => #<Wait>
 wait.until { Time.now.sec.even? }
-# Rescued exception while waiting: Wait::NoResultError: result was false
+# Rescued exception while waiting: Wait::TruthyTester::ResultNotTruthy: false
 # Attempt 1/5 failed, delaying for 1s
 # => true
 ```
@@ -39,7 +39,7 @@ wait.until do |attempt|
   when 3 then "foo"
   end
 end
-# Rescued exception while waiting: Wait::NoResultError: result was nil
+# Rescued exception while waiting: Wait::TruthyTester::ResultNotTruthy: nil
 # Attempt 1/5 failed, delaying for 1s
 # Rescued exception while waiting: RuntimeError: RuntimeError
 # Attempt 2/5 failed, delaying for 2s
@@ -59,6 +59,8 @@ end
   <dd>One or an array of exceptions to rescue. Default is <code>nil</code>.</dd>
   <dt>:debug</dt>
   <dd>If <code>true</code>, logs debugging output. Default is <code>false</code>.</dd>
+  <dt>:tester</dt>
+  <dd>Strategy to use to test the result. Default is <code>Wait::TruthyTester</code>.</dd>
 </dl>
 
 ## Documentation

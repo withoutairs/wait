@@ -17,6 +17,8 @@ class Wait
   #   One or an array of exceptions to rescue. Default is +nil+.
   # [:debug]
   #   If +true+, logs debugging output. Default is +false+.
+  # [:tester]
+  #   Strategy to use to test the result. Default is +Wait::TruthyTester+.
   #
   def initialize(options = {})
     @attempts   = options[:attempts] || 5
@@ -24,21 +26,34 @@ class Wait
     @delayer    = options[:delayer]  || RegularDelayer.new
     @exceptions = options[:rescue]
     debug       = options[:debug]    || false
+    @tester     = options[:tester]   || TruthyTester
 
     @counter = AttemptCounter.new(@attempts)
+    @logger = Logger.new(STDOUT)
+    @logger.level = debug ? Logger::DEBUG : Logger::WARN
 
+    validate_strategies
+  end
+
+  # Validates all of the assigned strategy objects.
+  def validate_strategies
     unless @delayer.respond_to?(:sleep)
       raise(ArgumentError, "delay strategy does not respond to sleep message: #{@delayer.inspect}")
     end
 
-    @logger = Logger.new(STDOUT)
-    @logger.level = debug ? Logger::DEBUG : Logger::WARN
+    unless @tester.respond_to?(:new)
+      raise(ArgumentError, "tester strategy does not respond to new message: #{@tester.inspect}")
+    end
+
+    unless @tester.new.respond_to?(:valid?)
+      raise(ArgumentError, "tester strategy does not respond to valid? message: #{@tester.inspect}")
+    end
   end
 
   # == Description
   #
-  # Wait#until executes a block until there's a result. Useful for blocking
-  # script execution until:
+  # Wait#until executes a block until there's a valid (by default, truthy)
+  # result. Useful for blocking script execution until:
   # * an HTTP request was successful
   # * a port has opened
   # * an external process has started
@@ -49,7 +64,7 @@ class Wait
   #   wait = Wait.new
   #   # => #<Wait>
   #   wait.until { Time.now.sec.even? }
-  #   # Rescued exception while waiting: Wait::NoResultError: result was false
+  #   # Rescued exception while waiting: Wait::TruthyTester::ResultNotTruthy: false
   #   # Attempt 1/5 failed, delaying for 1s
   #   # => true
   #
@@ -65,7 +80,7 @@ class Wait
   #     when 3 then "foo"
   #     end
   #   end
-  #   # Rescued exception while waiting: Wait::NoResultError: result was nil
+  #   # Rescued exception while waiting: Wait::TruthyTester::ResultNotTruthy: nil
   #   # Attempt 1/5 failed, delaying for 1s
   #   # Rescued exception while waiting: RuntimeError: RuntimeError
   #   # Attempt 2/5 failed, delaying for 2s
@@ -73,11 +88,11 @@ class Wait
   #
   # == Returns
   #
-  # The result of the block if not +nil+ or +false+.
+  # The result of the block if valid (by default, truthy).
   #
   # == Raises
   #
-  # The exception from the last attempt made.
+  # If no results are valid, the exception from the last attempt made.
   #
   def until(&block)
     # Reset the attempt counter.
@@ -87,18 +102,13 @@ class Wait
       @counter.increment
 
       result = Timeout.timeout(@timeout, Wait::TimeoutError) do
-        # Execute the block and pass the attempt value to it.
+        # Execute the block and pass the attempt count to it.
         yield(@counter.attempt)
       end
 
-      # If there's a result (neither +nil+ or +false+), return the result.
-      # Otherwise, raise a +Wait::NoResultError+ exception.
-      if result
-        result
-      else
-        raise(Wait::NoResultError, "result was #{result.inspect}")
-      end
-    rescue Wait::TimeoutError, Wait::NoResultError, *@exceptions => exception
+      tester = @tester.new(result)
+      tester.raise_unless_valid
+    rescue Wait::TimeoutError, *@tester.exceptions, *@exceptions => exception
       @logger.debug "Rescued exception while waiting: #{exception.class.name}: #{exception.message}"
       @logger.debug exception.backtrace.join("\n")
 
@@ -174,4 +184,24 @@ class Wait
       [@attempt, @total].join("/")
     end
   end # AttemptCounter
+
+  class TruthyTester
+    class ResultNotTruthy < RuntimeError; end
+
+    def self.exceptions
+      [ResultNotTruthy]
+    end
+
+    def initialize(result = nil)
+      @result = result
+    end
+
+    def raise_unless_valid
+      valid? ? @result : raise(ResultNotTruthy, @result.inspect)
+    end
+
+    def valid?
+      not (@result.nil? or @result == false)
+    end
+  end
 end #Wait

@@ -19,12 +19,12 @@ class WaitTest < Test::Unit::TestCase
     assert_equal "foo", result
   end
 
-  # Test that Wait::NoResultError is raised when the last attempt returns no
-  # result.
-  def test_raising_no_result
+  # Test that Wait::TruthyTester::ResultNotTruthy is raised when the last
+  # attempt returns a non-truthy result.
+  def test_raising_non_truthy_result
     options = {:delayer => DELAYER, :attempts => 1}
     wait = Wait.new(options)
-    assert_raise Wait::NoResultError do
+    assert_raise Wait::TruthyTester::ResultNotTruthy do
       wait.until { nil }
     end
   end
@@ -196,6 +196,19 @@ class WaitTest < Test::Unit::TestCase
 
     assert_raise ArgumentError do
       # The delayer, at the very least, must respond to the sleep method.
+      Wait.new(:delayer => String.new).until { }
+    end
+  end
+
+  # Test a couple combinations of invalid tester strategy objects.
+  def test_invalid_tester_strategy
+    assert_raise ArgumentError do
+      # The tester passed must be a class, not an instance.
+      Wait.new(:tester => Wait::TruthyTester.new).until { }
+    end
+
+    assert_raise ArgumentError do
+      # The tester, at the very least, must respond to the valid? method.
       Wait.new(:delayer => String.new).until { }
     end
   end
