@@ -87,6 +87,8 @@
           
           <li><a href="#method-c-new">::new</a></li>
           
+          <li><a href="#method-i-logger">#logger</a></li>
+          
           <li><a href="#method-i-until">#until</a></li>
           
           <li><a href="#method-i-validate_strategies">#validate_strategies</a></li>
@@ -216,12 +218,13 @@ href="Wait/RegularDelayer.html#method-c-new">Wait::RegularDelayer.new</a>+.</p>
 </dd><dt>:rescue</dt>
 <dd>
 <p>One or an array of exceptions to rescue. Default is <tt>nil</tt>.</p>
-</dd><dt>:debug</dt>
-<dd>
-<p>If <tt>true</tt>, logs debugging output. Default is <tt>false</tt>.</p>
 </dd><dt>:tester</dt>
 <dd>
 <p>Strategy to use to test the result. Default is +Wait::TruthyTester+.</p>
+</dd><dt>:logger</dt>
+<dd>
+<p>Ruby logger to use. Default is +<a
+href="Wait.html#method-i-logger">Wait#logger</a>+.</p>
 </dd></dl>
             
 
@@ -234,12 +237,10 @@ href="Wait/RegularDelayer.html#method-c-new">Wait::RegularDelayer.new</a>+.</p>
   <span class="ruby-ivar">@timeout</span>    = <span class="ruby-identifier">options</span>[<span class="ruby-value">:timeout</span>]  <span class="ruby-operator">||</span> <span class="ruby-value">15</span>
   <span class="ruby-ivar">@delayer</span>    = <span class="ruby-identifier">options</span>[<span class="ruby-value">:delayer</span>]  <span class="ruby-operator">||</span> <span class="ruby-constant">RegularDelayer</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">Array</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:rescue</span>])
-  <span class="ruby-identifier">debug</span>       = <span class="ruby-identifier">options</span>[<span class="ruby-value">:debug</span>]    <span class="ruby-operator">||</span> <span class="ruby-keyword">false</span>
   <span class="ruby-ivar">@tester</span>     = <span class="ruby-identifier">options</span>[<span class="ruby-value">:tester</span>]   <span class="ruby-operator">||</span> <span class="ruby-constant">TruthyTester</span>
+  <span class="ruby-ivar">@logger</span>     = <span class="ruby-identifier">options</span>[<span class="ruby-value">:logger</span>]   <span class="ruby-operator">||</span> <span class="ruby-identifier">logger</span>
 
   <span class="ruby-ivar">@counter</span> = <span class="ruby-constant">AttemptCounter</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@attempts</span>)
-  <span class="ruby-ivar">@logger</span> = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">STDOUT</span>)
-  <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">level</span> = <span class="ruby-identifier">debug</span> <span class="ruby-operator">?</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">DEBUG</span> <span class="ruby-operator">:</span> <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">WARN</span>
 
   <span class="ruby-identifier">validate_strategies</span>
 <span class="ruby-keyword">end</span></pre>
@@ -257,6 +258,44 @@ href="Wait/RegularDelayer.html#method-c-new">Wait::RegularDelayer.new</a>+.</p>
     
       <div id="public-instance-method-details" class="method-section section">
         <h3 class="section-header">Public Instance Methods</h3>
+
+      
+        <div id="logger-method" class="method-detail ">
+          <a name="method-i-logger"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">logger</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Returns a new (or existing) logger instance.</p>
+            
+
+            
+            <div class="method-source-code" id="logger-source">
+<pre>
+<span class="ruby-comment"># File lib/wait.rb, line 52</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">logger</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-ivar">@logger</span> = <span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">STDOUT</span>)
+    <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">level</span> = <span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">WARN</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-ivar">@logger</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- logger-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- logger-method -->
 
       
         <div id="until-method" class="method-detail ">
@@ -326,7 +365,7 @@ end
             
             <div class="method-source-code" id="until-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 97</span>
+<span class="ruby-comment"># File lib/wait.rb, line 105</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">until</span>(&amp;<span class="ruby-identifier">block</span>)
   <span class="ruby-comment"># Reset the attempt counter.</span>
   <span class="ruby-ivar">@counter</span>.<span class="ruby-identifier">reset</span>
@@ -342,15 +381,15 @@ end
     <span class="ruby-identifier">tester</span> = <span class="ruby-ivar">@tester</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">result</span>)
     <span class="ruby-identifier">tester</span>.<span class="ruby-identifier">raise_unless_valid</span>
   <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">TimeoutError</span>, *(<span class="ruby-ivar">@tester</span>.<span class="ruby-identifier">exceptions</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@exceptions</span>) =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">exception</span>
-    <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Rescued exception while waiting: #{exception.class.name}: #{exception.message}&quot;</span>
-    <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-identifier">exception</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;\n&quot;</span>)
+    <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Rescued exception while waiting: #{exception.class.name}: #{exception.message}&quot;</span>
+    <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-identifier">exception</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;\n&quot;</span>)
 
     <span class="ruby-comment"># If this was the last attempt, raise the exception from the last</span>
     <span class="ruby-comment"># attempt.</span>
     <span class="ruby-keyword">if</span> <span class="ruby-ivar">@counter</span>.<span class="ruby-identifier">last_attempt?</span>
       <span class="ruby-identifier">raise</span>(<span class="ruby-identifier">exception</span>)
     <span class="ruby-keyword">else</span>
-      <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Attempt #{@counter} failed, delaying for #{@delayer}&quot;</span>
+      <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;Attempt #{@counter} failed, delaying for #{@delayer}&quot;</span>
       <span class="ruby-ivar">@delayer</span>.<span class="ruby-identifier">sleep</span>
       <span class="ruby-keyword">retry</span>
     <span class="ruby-keyword">end</span>
@@ -385,7 +424,7 @@ end
             
             <div class="method-source-code" id="validate_strategies-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 39</span>
+<span class="ruby-comment"># File lib/wait.rb, line 37</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">validate_strategies</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@delayer</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:sleep</span>)
     <span class="ruby-identifier">raise</span>(<span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;delay strategy does not respond to sleep message: #{@delayer.inspect}&quot;</span>)

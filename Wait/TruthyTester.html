@@ -198,7 +198,7 @@
             
             <div class="method-source-code" id="exceptions-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 191</span>
+<span class="ruby-comment"># File lib/wait.rb, line 199</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">exceptions</span>
   [<span class="ruby-constant">ResultNotTruthy</span>]
 <span class="ruby-keyword">end</span></pre>
@@ -231,7 +231,7 @@
             
             <div class="method-source-code" id="new-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 195</span>
+<span class="ruby-comment"># File lib/wait.rb, line 203</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">result</span> = <span class="ruby-keyword">nil</span>)
   <span class="ruby-ivar">@result</span> = <span class="ruby-identifier">result</span>
 <span class="ruby-keyword">end</span></pre>
@@ -270,7 +270,7 @@
             
             <div class="method-source-code" id="raise_unless_valid-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 199</span>
+<span class="ruby-comment"># File lib/wait.rb, line 207</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">raise_unless_valid</span>
   <span class="ruby-identifier">valid?</span> <span class="ruby-operator">?</span> <span class="ruby-ivar">@result</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">raise</span>(<span class="ruby-constant">ResultNotTruthy</span>, <span class="ruby-ivar">@result</span>.<span class="ruby-identifier">inspect</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -303,7 +303,7 @@
             
             <div class="method-source-code" id="valid-3F-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 203</span>
+<span class="ruby-comment"># File lib/wait.rb, line 211</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">valid?</span>
   <span class="ruby-keyword">not</span> (<span class="ruby-ivar">@result</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">or</span> <span class="ruby-ivar">@result</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>)
 <span class="ruby-keyword">end</span></pre>

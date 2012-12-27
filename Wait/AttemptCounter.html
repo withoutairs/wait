@@ -212,7 +212,7 @@
             
             <div class="method-source-code" id="new-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 161</span>
+<span class="ruby-comment"># File lib/wait.rb, line 169</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">total</span>)
   <span class="ruby-comment"># Prevent accidentally causing an infinite loop.</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">total</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Fixnum</span>) <span class="ruby-keyword">and</span> <span class="ruby-identifier">total</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
@@ -257,7 +257,7 @@
             
             <div class="method-source-code" id="increment-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 175</span>
+<span class="ruby-comment"># File lib/wait.rb, line 183</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">increment</span>
   <span class="ruby-ivar">@attempt</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
 <span class="ruby-keyword">end</span></pre>
@@ -290,7 +290,7 @@
             
             <div class="method-source-code" id="last_attempt-3F-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 179</span>
+<span class="ruby-comment"># File lib/wait.rb, line 187</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">last_attempt?</span>
   <span class="ruby-ivar">@attempt</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@total</span>
 <span class="ruby-keyword">end</span></pre>
@@ -323,7 +323,7 @@
             
             <div class="method-source-code" id="reset-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 171</span>
+<span class="ruby-comment"># File lib/wait.rb, line 179</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">reset</span>
   <span class="ruby-ivar">@attempt</span> = <span class="ruby-value">0</span>
 <span class="ruby-keyword">end</span></pre>
@@ -356,7 +356,7 @@
             
             <div class="method-source-code" id="to_s-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 183</span>
+<span class="ruby-comment"># File lib/wait.rb, line 191</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
   [<span class="ruby-ivar">@attempt</span>, <span class="ruby-ivar">@total</span>].<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;/&quot;</span>)
 <span class="ruby-keyword">end</span></pre>
