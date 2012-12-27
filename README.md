@@ -57,10 +57,10 @@ end
   <dd>Delay strategy to use to sleep in between attempts. Default is <code>Wait::RegularDelayer.new</code>.</dd>
   <dt>:rescue</dt>
   <dd>One or an array of exceptions to rescue. Default is <code>nil</code>.</dd>
-  <dt>:debug</dt>
-  <dd>If <code>true</code>, logs debugging output. Default is <code>false</code>.</dd>
   <dt>:tester</dt>
   <dd>Strategy to use to test the result. Default is <code>Wait::TruthyTester</code>.</dd>
+  <dt>:logger</dt>
+  <dd>Ruby logger to use. Default is <code>Wait#logger</code>.</dd>
 </dl>
 
 ## Documentation

@@ -15,22 +15,20 @@ class Wait
   #   +Wait::RegularDelayer.new+.
   # [:rescue]
   #   One or an array of exceptions to rescue. Default is +nil+.
-  # [:debug]
-  #   If +true+, logs debugging output. Default is +false+.
   # [:tester]
   #   Strategy to use to test the result. Default is +Wait::TruthyTester+.
+  # [:logger]
+  #   Ruby logger to use. Default is +Wait#logger+.
   #
   def initialize(options = {})
     @attempts   = options[:attempts] || 5
     @timeout    = options[:timeout]  || 15
     @delayer    = options[:delayer]  || RegularDelayer.new
     @exceptions = Array(options[:rescue])
-    debug       = options[:debug]    || false
     @tester     = options[:tester]   || TruthyTester
+    @logger     = options[:logger]   || logger
 
     @counter = AttemptCounter.new(@attempts)
-    @logger = Logger.new(STDOUT)
-    @logger.level = debug ? Logger::DEBUG : Logger::WARN
 
     validate_strategies
   end
@@ -48,6 +46,16 @@ class Wait
     unless @tester.new.respond_to?(:valid?)
       raise(ArgumentError, "tester strategy does not respond to valid? message: #{@tester.inspect}")
     end
+  end
+
+  # Returns a new (or existing) logger instance.
+  def logger
+    if @logger.nil?
+      @logger = Logger.new(STDOUT)
+      @logger.level = Logger::WARN
+    end
+
+    @logger
   end
 
   # == Description
@@ -109,15 +117,15 @@ class Wait
       tester = @tester.new(result)
       tester.raise_unless_valid
     rescue Wait::TimeoutError, *(@tester.exceptions + @exceptions) => exception
-      @logger.debug "Rescued exception while waiting: #{exception.class.name}: #{exception.message}"
-      @logger.debug exception.backtrace.join("\n")
+      logger.debug "Rescued exception while waiting: #{exception.class.name}: #{exception.message}"
+      logger.debug exception.backtrace.join("\n")
 
       # If this was the last attempt, raise the exception from the last
       # attempt.
       if @counter.last_attempt?
         raise(exception)
       else
-        @logger.debug "Attempt #{@counter} failed, delaying for #{@delayer}"
+        logger.debug "Attempt #{@counter} failed, delaying for #{@delayer}"
         @delayer.sleep
         retry
       end
