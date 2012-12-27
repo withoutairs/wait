@@ -12,13 +12,13 @@ class Wait
   #   Seconds until the block times out. Default is +15+.
   # [:delayer]
   #   Delay strategy to use to sleep in between attempts. Default is
-  #   +Wait::RegularDelayer.new+.
+  #   Wait::RegularDelayer.new.
   # [:rescue]
   #   One or an array of exceptions to rescue. Default is +nil+.
   # [:tester]
-  #   Strategy to use to test the result. Default is +Wait::TruthyTester+.
+  #   Strategy to use to test the result. Default is Wait::TruthyTester.
   # [:logger]
-  #   Ruby logger to use. Default is +Wait#logger+.
+  #   Ruby logger to use. Default is Wait#logger.
   #
   def initialize(options = {})
     @attempts   = options[:attempts] || 5
