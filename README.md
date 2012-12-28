@@ -13,7 +13,7 @@ The wait gem executes a block until there's a valid (by default, truthy) result.
 Add to your `Gemfile`:
 
 ```ruby
-gem "wait", :git => "git@github.com:paperlesspost/wait.git"
+gem "wait", "~> 0.2.2"
 ```
 
 ## Examples
