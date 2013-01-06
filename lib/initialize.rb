@@ -2,14 +2,14 @@ require "timeout"
 require "logger"
 require "forwardable"
 
-require_relative "loggers/base"
-require_relative "loggers/debug"
-require_relative "counters/base"
-require_relative "delayers/base"
-require_relative "delayers/regular"
-require_relative "delayers/exponential"
-require_relative "testers/base"
-require_relative "testers/passive"
-require_relative "testers/truthy"
-require_relative "rescuers/base"
-require_relative "rescuers/passive"
+require File.expand_path("../loggers/base",         __FILE__)
+require File.expand_path("../loggers/debug",        __FILE__)
+require File.expand_path("../counters/base",        __FILE__)
+require File.expand_path("../delayers/base",        __FILE__)
+require File.expand_path("../delayers/regular",     __FILE__)
+require File.expand_path("../delayers/exponential", __FILE__)
+require File.expand_path("../testers/base",         __FILE__)
+require File.expand_path("../testers/passive",      __FILE__)
+require File.expand_path("../testers/truthy",       __FILE__)
+require File.expand_path("../rescuers/base",        __FILE__)
+require File.expand_path("../rescuers/passive",     __FILE__)
