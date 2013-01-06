@@ -1,7 +1,30 @@
 require "timeout"
 require "logger"
 
+require_relative "attempt_counter"
+require_relative "delayers/regular"
+require_relative "delayers/exponential"
+require_relative "testers/truthy"
+
 class Wait
+  class Logger
+    attr_reader :logger
+
+    def initialize
+      @logger       = ::Logger.new(STDOUT)
+      @logger.level = ::Logger::WARN
+    end
+  end # Logger
+
+  DEFAULT = {
+    :attempts => 5,
+    :timeout  => 15,
+    :delay    => 1,
+    :delayer  => RegularDelayer,
+    :tester   => TruthyTester,
+    :logger   => Logger
+  }
+
   # Creates a new Wait instance.
   #
   # == Options
@@ -10,44 +33,32 @@ class Wait
   #   Number of times to attempt the block. Default is +5+.
   # [:timeout]
   #   Seconds until the block times out. Default is +15+.
+  # [:delay]
+  #   Seconds to delay in between attempts. Passed to +delayer+. Default is
+  #   +1+.
   # [:delayer]
-  #   Delay strategy to use to sleep in between attempts. Default is
-  #   Wait::RegularDelayer.new.
+  #   Delay strategy used to sleep in between attempts. Default is
+  #   Wait::RegularDelayer.
   # [:rescue]
   #   One or an array of exceptions to rescue. Default is +nil+.
   # [:tester]
-  #   Strategy to use to test the result. Default is Wait::TruthyTester.
+  #   Strategy used to test the result. Default is Wait::TruthyTester.
   # [:logger]
-  #   Ruby logger to use. Default is Wait#logger.
+  #   Ruby logger used. Default is Wait::Logger.
   #
   def initialize(options = {})
-    @attempts   = options[:attempts] || 5
-    @timeout    = options[:timeout]  || 15
-    @delayer    = options[:delayer]  || RegularDelayer.new
+    attempts    = options[:attempts]           || DEFAULT[:attempts]
+    @counter    = AttemptCounter.new(attempts)
+    @timeout    = options[:timeout]            || DEFAULT[:timeout]
+    delay       = options[:delay]              || DEFAULT[:delay]
+    @delayer    = (options[:delayer]           || DEFAULT[:delayer]).new(delay)
     @exceptions = Array(options[:rescue])
-    @tester     = options[:tester]   || TruthyTester
-    @logger     = options[:logger]   || logger
-
-    @counter = AttemptCounter.new(@attempts)
-
-    validate_strategies
+    @tester     = options[:tester]             || DEFAULT[:tester]
+    @logger     = (options[:logger]            || DEFAULT[:logger]).new
   end
 
-  # Validates all of the assigned strategy objects.
-  def validate_strategies
-    StrategyValidator.new(:delayer, @delayer,    :sleep ).validate
-    StrategyValidator.new(:tester,  @tester,     :new   ).validate
-    StrategyValidator.new(:tester,  @tester.new, :valid?).validate
-  end
-
-  # Returns a new (or existing) logger instance.
   def logger
-    if @logger.nil?
-      @logger = Logger.new(STDOUT)
-      @logger.level = Logger::WARN
-    end
-
-    @logger
+    @logger.logger
   end
 
   # == Description
@@ -127,9 +138,3 @@ class Wait
   # Raised when a block times out.
   class TimeoutError < Timeout::Error; end
 end #Wait
-
-require_relative "attempt_counter"
-require_relative "strategy_validator"
-require_relative "delayers/regular"
-require_relative "delayers/exponential"
-require_relative "testers/truthy"

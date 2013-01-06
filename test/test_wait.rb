@@ -8,12 +8,12 @@ class WaitTest < Test::Unit::TestCase
   # An exception used for testing (2/2).
   class TestErrorBar < StandardError; end
 
-  # A delay strategy with a very short delay used for testing.
-  DELAYER = Wait::RegularDelayer.new(0.001)
+  # A very short delay useful for testing.
+  DELAY = 0.001
 
   # Test that the result of the block is the result of Wait#until.
   def test_result
-    options = {:delayer => DELAYER, :attempts => 1}
+    options = {:delay => DELAY, :attempts => 1}
     wait = Wait.new(options)
     result = wait.until { "foo" }
     assert_equal "foo", result
@@ -22,7 +22,7 @@ class WaitTest < Test::Unit::TestCase
   # Test that Wait::TruthyTester::ResultNotTruthy is raised when the last
   # attempt returns a non-truthy result.
   def test_raising_non_truthy_result
-    options = {:delayer => DELAYER, :attempts => 1}
+    options = {:delay => DELAY, :attempts => 1}
     wait = Wait.new(options)
     assert_raise Wait::TruthyTester::ResultNotTruthy do
       wait.until { nil }
@@ -31,7 +31,7 @@ class WaitTest < Test::Unit::TestCase
 
   # Test that Wait::TimeoutError is raised when the last attempt times out.
   def test_raising_timeout
-    options = {:delayer => DELAYER, :attempts => 1, :timeout => 1}
+    options = {:delay => DELAY, :attempts => 1, :timeout => 1}
     wait = Wait.new(options)
     assert_raise Wait::TimeoutError do
       wait.until { sleep }
@@ -41,7 +41,7 @@ class WaitTest < Test::Unit::TestCase
   # Test that WaitTest::TestErrorFoo is raised when the last attempt raises
   # WaitTest::TestErrorFoo.
   def test_raising_other
-    options = {:delayer => DELAYER, :attempts => 1, :rescue => WaitTest::TestErrorFoo}
+    options = {:delay => DELAY, :attempts => 1, :rescue => WaitTest::TestErrorFoo}
     wait = Wait.new(options)
     assert_raise WaitTest::TestErrorFoo do
       wait.until { raise WaitTest::TestErrorFoo }
@@ -53,9 +53,9 @@ class WaitTest < Test::Unit::TestCase
   def test_regular_delayer
     # Set up the initial delay value and strategy to use.
     delay = 0.1
-    delayer = Wait::RegularDelayer.new(delay)
+    delayer = Wait::RegularDelayer
     attempts = 4
-    options = {:delayer => delayer, :attempts => attempts}
+    options = {:delay => delay, :delayer => delayer, :attempts => attempts}
     wait = Wait.new(options)
 
     # Initialize a variable to store timing information.
@@ -80,9 +80,9 @@ class WaitTest < Test::Unit::TestCase
   def test_exponential_delayer
     # Set up the initial delay value and strategy to use.
     delay = 0.1
-    delayer = Wait::ExponentialDelayer.new(delay)
+    delayer = Wait::ExponentialDelayer
     attempts = 4
-    options = {:delayer => delayer, :attempts => attempts}
+    options = {:delay => delay, :delayer => delayer, :attempts => attempts}
     wait = Wait.new(options)
 
     # Initialize a variable to store timing information.
@@ -104,7 +104,7 @@ class WaitTest < Test::Unit::TestCase
 
   # Test that a +nil+ result is rescued.
   def test_rescuing_nil_result
-    options = {:delayer => DELAYER, :attempts => 2}
+    options = {:delay => DELAY, :attempts => 2}
     wait = Wait.new(options)
     result = wait.until do |attempt|
       case attempt
@@ -117,7 +117,7 @@ class WaitTest < Test::Unit::TestCase
 
   # Test that a +false+ result is rescued.
   def test_rescuing_false_result
-    options = {:delayer => DELAYER, :attempts => 2}
+    options = {:delay => DELAY, :attempts => 2}
     wait = Wait.new(options)
     result = wait.until do |attempt|
       case attempt
@@ -130,7 +130,7 @@ class WaitTest < Test::Unit::TestCase
 
   # Test that a timeout is rescued.
   def test_rescuing_timeout
-    options = {:delayer => DELAYER, :attempts => 2, :timeout => 1}
+    options = {:delay => DELAY, :attempts => 2, :timeout => 1}
     wait = Wait.new(options)
     result = wait.until do |attempt|
       case attempt
@@ -144,7 +144,7 @@ class WaitTest < Test::Unit::TestCase
   # Test that an exception specified by the +:rescue+ option
   # (WaitTest::TestErrorFoo) is rescued.
   def test_rescuing_exception_specified_by_rescue_option
-    options = {:delayer => DELAYER, :attempts => 2, :rescue => WaitTest::TestErrorFoo}
+    options = {:delay => DELAY, :attempts => 2, :rescue => WaitTest::TestErrorFoo}
     wait = Wait.new(options)
     result = wait.until do |attempt|
       case attempt
@@ -158,7 +158,7 @@ class WaitTest < Test::Unit::TestCase
   # Test that an exception *not* specified by the +:rescue+ option
   # (WaitTest::TestErrorBar) is *not* rescued.
   def test_not_rescuing_exception_not_specified_by_rescue_option
-    options = {:delayer => DELAYER, :attempts => 2, :rescue => WaitTest::TestErrorFoo}
+    options = {:delay => DELAY, :attempts => 2, :rescue => WaitTest::TestErrorFoo}
     wait = Wait.new(options)
     assert_raise WaitTest::TestErrorBar do
       wait.until do |attempt|
@@ -183,33 +183,6 @@ class WaitTest < Test::Unit::TestCase
 
     assert_raise ArgumentError do
       Wait.new(:attempts => 1.1).until { }
-    end
-  end
-
-  # Test a couple combinations of invalid delay strategy objects.
-  def test_invalid_delay_strategy
-    assert_raise ArgumentError do
-      # The delayer passed must be an instance of Wait::RegularDelayer, not
-      # the class itself.
-      Wait.new(:delayer => Wait::RegularDelayer).until { }
-    end
-
-    assert_raise ArgumentError do
-      # The delayer, at the very least, must respond to the sleep method.
-      Wait.new(:delayer => String.new).until { }
-    end
-  end
-
-  # Test a couple combinations of invalid tester strategy objects.
-  def test_invalid_tester_strategy
-    assert_raise ArgumentError do
-      # The tester passed must be a class, not an instance.
-      Wait.new(:tester => Wait::TruthyTester.new).until { }
-    end
-
-    assert_raise ArgumentError do
-      # The tester, at the very least, must respond to the valid? method.
-      Wait.new(:delayer => String.new).until { }
     end
   end
 end

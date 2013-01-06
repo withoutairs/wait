@@ -53,14 +53,16 @@ end
   <dd>Number of times to attempt the block. Default is <code>5</code>.</dd>
   <dt>:timeout</dt>
   <dd>Seconds until the block times out. Default is <code>15</code>.</dd>
+  <dt>:delay</dt>
+  <dd>Seconds to delay in between attempts. Passed to <code>delayer</code>. Default is <code>1</code>.
   <dt>:delayer</dt>
-  <dd>Delay strategy to use to sleep in between attempts. Default is <code>Wait::RegularDelayer.new</code>.</dd>
+  <dd>Delay strategy used to sleep in between attempts. Default is <code>Wait::RegularDelayer</code>.</dd>
   <dt>:rescue</dt>
   <dd>One or an array of exceptions to rescue. Default is <code>nil</code>.</dd>
   <dt>:tester</dt>
-  <dd>Strategy to use to test the result. Default is <code>Wait::TruthyTester</code>.</dd>
+  <dd>Strategy used to test the result. Default is <code>Wait::TruthyTester</code>.</dd>
   <dt>:logger</dt>
-  <dd>Ruby logger to use. Default is <code>Wait#logger</code>.</dd>
+  <dd>Ruby logger used. Default is <code>Wait::Logger</code>.</dd>
 </dl>
 
 ## Documentation

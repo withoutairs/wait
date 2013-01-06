@@ -1,6 +1,6 @@
 class Wait
   class RegularDelayer
-    def initialize(initial_delay = 1)
+    def initialize(initial_delay)
       @delay = initial_delay
     end
 
