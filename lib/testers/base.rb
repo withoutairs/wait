@@ -1,21 +1,28 @@
 class Wait
-  class TruthyTester < BaseTester
-    class ResultNotTruthy < RuntimeError; end
-
+  class BaseTester
     # Returns an array of exceptions that ought to be rescued by the rescuer.
     def exceptions
-      [ResultNotTruthy]
+      []
+    end
+
+    def initialize(logger)
+      @logger = logger
     end
 
     # Raises an exception unless the result is valid.
     def raise_unless_valid(result)
-      log_result(result)
-      valid?(result) ? result : raise(ResultNotTruthy, result.inspect)
+      log_result
+      valid?(result)
     end
 
     # Returns +true+ if a result if valid.
     def valid?(result)
-      not (result.nil? or result == false)
+      true
     end
-  end # TruthyTester
+
+    # Logs a result.
+    def log_result(result)
+      @logger.debug "[Tester] result: #{result.inspect}"
+    end
+  end # BaseTester
 end # Wait

@@ -1,28 +1,15 @@
-require "timeout"
-require "logger"
-
-require_relative "attempt_counter"
-require_relative "delayers/regular"
-require_relative "delayers/exponential"
-require_relative "testers/truthy"
+require_relative "initialize"
 
 class Wait
-  class Logger
-    attr_reader :logger
-
-    def initialize
-      @logger       = ::Logger.new(STDOUT)
-      @logger.level = ::Logger::WARN
-    end
-  end # Logger
-
   DEFAULT = {
-    :attempts => 5,
     :timeout  => 15,
+    :logger   => BaseLogger,
+    :attempts => 5,
+    :counter  => BaseCounter,
     :delay    => 1,
     :delayer  => RegularDelayer,
     :tester   => TruthyTester,
-    :logger   => Logger
+    :rescuer  => PassiveRescuer
   }
 
   # Creates a new Wait instance.
@@ -30,36 +17,43 @@ class Wait
   # == Options
   #
   # [:attempts]
-  #   Number of times to attempt the block. Default is +5+.
+  #   Number of times to attempt the block (passed to +counter+). Default is
+  #   +5+.
+  # [:counter]
+  #   Strategy used to count attempts. Default is Wait::BaseCounter.
   # [:timeout]
   #   Seconds until the block times out. Default is +15+.
   # [:delay]
-  #   Seconds to delay in between attempts. Passed to +delayer+. Default is
+  #   Seconds to delay in between attempts (passed to +delayer+). Default is
   #   +1+.
   # [:delayer]
-  #   Delay strategy used to sleep in between attempts. Default is
+  #   Strategy used to delay in between attempts. Default is
   #   Wait::RegularDelayer.
   # [:rescue]
-  #   One or an array of exceptions to rescue. Default is +nil+.
+  #   One or an array of exceptions to rescue (passed to +rescuer+). Default
+  #   is +nil+.
+  # [:rescuer]
+  #   Strategy used to handle exceptions. Default is Wait::PassiveRescuer.
   # [:tester]
   #   Strategy used to test the result. Default is Wait::TruthyTester.
   # [:logger]
-  #   Ruby logger used. Default is Wait::Logger.
+  #   Ruby logger used. Default is Wait::BaseLogger.
   #
   def initialize(options = {})
-    attempts    = options[:attempts]           || DEFAULT[:attempts]
-    @counter    = AttemptCounter.new(attempts)
     @timeout    = options[:timeout]            || DEFAULT[:timeout]
+    debug       = options[:debug]
+    @logger     = (options[:logger]            || (debug ? DebugLogger : DEFAULT[:logger])).new
+    attempts    = options[:attempts]           || DEFAULT[:attempts]
+    @counter    = (options[:counter]           || DEFAULT[:counter]).new(@logger, attempts)
     delay       = options[:delay]              || DEFAULT[:delay]
-    @delayer    = (options[:delayer]           || DEFAULT[:delayer]).new(delay)
-    @exceptions = Array(options[:rescue])
-    @tester     = options[:tester]             || DEFAULT[:tester]
-    @logger     = (options[:logger]            || DEFAULT[:logger]).new
+    @delayer    = (options[:delayer]           || DEFAULT[:delayer]).new(@logger, delay)
+    @tester     = (options[:tester]            || DEFAULT[:tester]).new(@logger)
+    exceptions  = Array(options[:rescue])
+    @rescuer    = (options[:rescuer]           || DEFAULT[:rescuer]).new(@logger, @tester.exceptions, exceptions)
   end
 
-  def logger
-    @logger.logger
-  end
+  # Raised when a block times out.
+  class TimeoutError < Timeout::Error; end
 
   # == Description
   #
@@ -67,7 +61,7 @@ class Wait
   # result. Useful for blocking script execution until:
   # * an HTTP request was successful
   # * a port has opened
-  # * an external process has started
+  # * a process has started
   # * etc.
   #
   # == Examples
@@ -75,8 +69,11 @@ class Wait
   #   wait = Wait.new
   #   # => #<Wait>
   #   wait.until { Time.now.sec.even? }
-  #   # Rescued exception while waiting: Wait::TruthyTester::ResultNotTruthy: false
-  #   # Attempt 1/5 failed, delaying for 1s
+  #   # [Tester] result: false
+  #   # [Rescuer] rescued: Wait::TruthyTester::ResultNotTruthy: false
+  #   # [Counter] attempt 1/5 failed
+  #   # [Delayer] delaying for 1s
+  #   # [Tester] result: true
   #   # => true
   #
   # If you wish to handle an exception by attempting the block again, pass one
@@ -91,10 +88,14 @@ class Wait
   #     when 3 then "foo"
   #     end
   #   end
-  #   # Rescued exception while waiting: Wait::TruthyTester::ResultNotTruthy: nil
-  #   # Attempt 1/5 failed, delaying for 1s
-  #   # Rescued exception while waiting: RuntimeError: RuntimeError
-  #   # Attempt 2/5 failed, delaying for 2s
+  #   # [Tester] result: nil
+  #   # [Rescuer] rescued: Wait::TruthyTester::ResultNotTruthy: nil
+  #   # [Counter] attempt 1/5 failed
+  #   # [Delayer] delaying for 1s
+  #   # [Rescuer] rescued: RuntimeError: RuntimeError
+  #   # [Counter] attempt 2/5 failed
+  #   # [Delayer] delaying for 1s
+  #   # [Tester] result: "foo"
   #   # => "foo"
   #
   # == Returns
@@ -108,33 +109,25 @@ class Wait
   def until(&block)
     # Reset the attempt counter.
     @counter.reset
-
     begin
+      # Increment the attempt counter.
       @counter.increment
-
-      result = Timeout.timeout(@timeout, Wait::TimeoutError) do
-        # Execute the block and pass the attempt count to it.
+      # Wrap the given block in a timeout.
+      result = Timeout.timeout(@timeout, TimeoutError) do
+        # Execute the block and pass the attempt count (an +Integer+) to it.
         yield(@counter.attempt)
       end
-
-      tester = @tester.new(result)
-      tester.raise_unless_valid
-    rescue Wait::TimeoutError, *(@tester.exceptions + @exceptions) => exception
-      logger.debug "Rescued exception while waiting: #{exception.class.name}: #{exception.message}"
-      logger.debug exception.backtrace.join("\n")
-
-      # If this was the last attempt, raise the exception from the last
-      # attempt.
-      if @counter.last_attempt?
-        raise(exception)
-      else
-        logger.debug "Attempt #{@counter} failed, delaying for #{@delayer}"
-        @delayer.sleep
-        retry
-      end
+      # Raise an exception unless the result is valid.
+      @tester.raise_unless_valid(result)
+    rescue *@rescuer.exceptions => exception
+      # Raise the exception unless it can be ignored.
+      @rescuer.raise_unless_ignore(exception)
+      # Raise the exception if this was the last attempt.
+      @counter.raise_if_last_attempt(exception)
+      # Sleep before the next attempt.
+      @delayer.sleep
+      # Try the block again.
+      retry
     end
   end
-
-  # Raised when a block times out.
-  class TimeoutError < Timeout::Error; end
 end #Wait
