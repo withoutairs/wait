@@ -132,84 +132,11 @@ class Wait
     end
   end
 
-  # Raised when a block doesn't return a result (+nil+ or +false+).
-  class NoResultError < StandardError; end
-
   # Raised when a block times out.
   class TimeoutError < Timeout::Error; end
-
-  class RegularDelayer
-    def initialize(initial_delay = 1)
-      @delay = initial_delay
-    end
-
-    def sleep
-      Kernel.sleep(@delay)
-    end
-
-    def to_s
-      "#{@delay}s"
-    end
-  end # RegularDelayer
-
-  class ExponentialDelayer < RegularDelayer
-    def sleep
-      super
-      increment
-    end
-
-    def increment
-      @delay *= 2
-    end
-  end # ExponentialDelayer
-
-  class AttemptCounter
-    attr_reader :attempt
-
-    def initialize(total)
-      # Prevent accidentally causing an infinite loop.
-      unless total.is_a?(Fixnum) and total > 0
-        raise(ArgumentError, "invalid number of attempts: #{total.inspect}")
-      end
-
-      @total = total
-      reset
-    end
-
-    def reset
-      @attempt = 0
-    end
-
-    def increment
-      @attempt += 1
-    end
-
-    def last_attempt?
-      @attempt == @total
-    end
-
-    def to_s
-      [@attempt, @total].join("/")
-    end
-  end # AttemptCounter
-
-  class TruthyTester
-    class ResultNotTruthy < RuntimeError; end
-
-    def self.exceptions
-      [ResultNotTruthy]
-    end
-
-    def initialize(result = nil)
-      @result = result
-    end
-
-    def raise_unless_valid
-      valid? ? @result : raise(ResultNotTruthy, @result.inspect)
-    end
-
-    def valid?
-      not (@result.nil? or @result == false)
-    end
-  end
 end #Wait
+
+require_relative "attempt_counter"
+require_relative "delayers/regular"
+require_relative "delayers/exponential"
+require_relative "testers/truthy"
