@@ -35,17 +35,9 @@ class Wait
 
   # Validates all of the assigned strategy objects.
   def validate_strategies
-    unless @delayer.respond_to?(:sleep)
-      raise(ArgumentError, "delay strategy does not respond to sleep message: #{@delayer.inspect}")
-    end
-
-    unless @tester.respond_to?(:new)
-      raise(ArgumentError, "tester strategy does not respond to new message: #{@tester.inspect}")
-    end
-
-    unless @tester.new.respond_to?(:valid?)
-      raise(ArgumentError, "tester strategy does not respond to valid? message: #{@tester.inspect}")
-    end
+    StrategyValidator.new(:delayer, @delayer,    :sleep ).validate
+    StrategyValidator.new(:tester,  @tester,     :new   ).validate
+    StrategyValidator.new(:tester,  @tester.new, :valid?).validate
   end
 
   # Returns a new (or existing) logger instance.
@@ -137,6 +129,7 @@ class Wait
 end #Wait
 
 require_relative "attempt_counter"
+require_relative "strategy_validator"
 require_relative "delayers/regular"
 require_relative "delayers/exponential"
 require_relative "testers/truthy"
