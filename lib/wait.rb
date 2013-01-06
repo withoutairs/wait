@@ -1,4 +1,4 @@
-require_relative "initialize"
+require File.expand_path("../initialize", __FILE__)
 
 class Wait
   DEFAULT = {
