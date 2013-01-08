@@ -22,10 +22,12 @@ gem "wait", "~> 0.3.2"
 wait = Wait.new
 # => #<Wait>
 wait.until { Time.now.sec.even? }
+# [Counter] attempt 1/5
 # [Tester] result: false
-# [Rescuer] rescued: Wait::TruthyTester::ResultNotTruthy: false
-# [Counter] attempt 1/5 failed
+# [Rescuer] rescued: Wait::InvalidResult: Wait::InvalidResult
+# [Raiser] raise? Wait::InvalidResult: false
 # [Delayer] delaying for 1s
+# [Counter] attempt 2/5
 # [Tester] result: true
 # => true
 ```
@@ -42,38 +44,50 @@ wait.until do |attempt|
   when 3 then "foo"
   end
 end
+# [Counter] attempt 1/5
 # [Tester] result: nil
-# [Rescuer] rescued: Wait::TruthyTester::ResultNotTruthy: nil
-# [Counter] attempt 1/5 failed
+# [Rescuer] rescued: Wait::InvalidResult: Wait::InvalidResult
+# [Raiser] raise? Wait::InvalidResult: false
 # [Delayer] delaying for 1s
+# [Counter] attempt 2/5
 # [Rescuer] rescued: RuntimeError: RuntimeError
-# [Counter] attempt 2/5 failed
+# [Raiser] raise? RuntimeError: false
 # [Delayer] delaying for 1s
+# [Counter] attempt 3/5
 # [Tester] result: "foo"
 # => "foo"
 ```
 
-## Options
+## Basic Options
 
 <dl>
-<dt>attempts</dt>
-<dd>Number of times to attempt the block (passed to <code>counter</code>). Default is <code>5</code>.</dd>
-<dt>counter</dt>
-<dd>Strategy used to count attempts. Default is <code>Wait::BaseCounter</code>.</dd>
-<dt>timeout</dt>
-<dd>Seconds until the block times out. Default is <code>15</code>.</dd>
-<dt>delay</dt>
-<dd>Seconds to delay in between attempts (passed to <code>delayer</code>). Default is <code>1</code>.</dd>
-<dt>delayer</dt>
-<dd>Strategy used to delay in between attempts. Default is <code>Wait::RegularDelayer</code>.</dd>
-<dt>rescue</dt>
-<dd>One or an array of exceptions to rescue (passed to <code>rescuer</code>). Default is <code>nil</code>.</dd>
-<dt>rescuer</dt>
-<dd>Strategy used to handle exceptions. Default is <code>Wait::PassiveRescuer</code>.</dd>
-<dt>tester</dt>
-<dd>Strategy used to test the result. Default is <code>Wait::TruthyTester</code>.</dd>
-<dt>logger</dt>
-<dd>Ruby logger used. Default is <code>Wait::BaseLogger</code>.</dd>
+  <dt>attempts</dt>
+  <dd>Number of times to attempt the block. Default is <code>5</code>.</dd>
+  <dt>timeout</dt>
+  <dd>Seconds until the block times out. Default is <code>15</code>.</dd>
+  <dt>delay</dt>
+  <dd>Seconds to delay in between attempts. Default is <code>1</code>.</dd>
+  <dt>rescue</dt>
+  <dd>One or an array of exceptions to rescue. Default is <code>nil</code>.</dd>
+  <dt>debug</dt>
+  <dd>If <code>true</code>, debug logging is enabled. Default is <code>false</code>.</dd>
+</dl>
+
+## Advanced Options
+
+<dl>
+  <dt>logger</dt>
+  <dd>Ruby logger used. Default is <code>Wait::BaseLogger</code>.</dd>
+  <dt>counter</dt>
+  <dd>Strategy used to count attempts. Default is <code>Wait::BaseCounter</code>.</dd>
+  <dt>delayer</dt>
+  <dd>Strategy used to delay in between attempts. Default is <code>Wait::RegularDelayer</code>.</dd>
+  <dt>rescuer</dt>
+  <dd>Strategy used to rescue exceptions. Default is <code>Wait::BaseRescuer</code>.</dd>
+  <dt>tester</dt>
+  <dd>Strategy used to test the result. Default is <code>Wait::TruthyTester</code>.</dd>
+  <dt>raiser</dt>
+  <dd>Strategy used to raise specific exceptions. Default is <code>Wait::PassiveRaiser</code>.</dd>
 </dl>
 
 ## Documentation

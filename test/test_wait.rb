@@ -19,12 +19,12 @@ class WaitTest < Test::Unit::TestCase
     assert_equal "foo", result
   end
 
-  # Test that Wait::TruthyTester::ResultNotTruthy is raised when the last
-  # attempt returns a non-truthy result.
+  # Test that Wait::InvalidResult is raised when the last attempt returns a
+  # non-truthy result.
   def test_raising_non_truthy_result
     options = {:delay => DELAY, :attempts => 1}
     wait = Wait.new(options)
-    assert_raise Wait::TruthyTester::ResultNotTruthy do
+    assert_raise Wait::InvalidResult do
       wait.until { nil }
     end
   end

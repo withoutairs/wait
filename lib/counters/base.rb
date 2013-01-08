@@ -14,21 +14,15 @@ class Wait
       reset
     end
 
-    # Called in between attempts to reset the counter.
+    # Called before all attempts to reset the counter.
     def reset
       @attempt = 0
     end
 
-    # Called before an attempt has started to increment the counter.
+    # Called before each attempt to increment the counter.
     def increment
       @attempt += 1
-    end
-
-    # When called, the exception given ought to be raised if this is the last
-    # attempt.
-    def raise_if_last_attempt(exception)
-      log_count
-      raise(exception) if last_attempt?
+      log
     end
 
     # Returns +true+ if this is the last attempt.
@@ -37,8 +31,8 @@ class Wait
     end
 
     # Logs the current attempt count.
-    def log_count
-      @logger.debug "[Counter] attempt #{self} failed"
+    def log
+      @logger.debug "[Counter] attempt #{self}"
     end
 
     # Returns a string representation of the current count.
