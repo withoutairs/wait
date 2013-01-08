@@ -34,8 +34,8 @@
         <div class="section-body">
           <ul>
           
-            <li><a href="../lib/wait_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
-              class="thickbox" title="lib/wait.rb">lib/wait.rb</a></li>
+            <li><a href="../lib/testers/truthy_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/testers/truthy.rb">lib/testers/truthy.rb</a></li>
           
           </ul>
         </div>
@@ -50,7 +50,7 @@
       <div id="parent-class-section" class="section">
         <h3 class="section-header">Parent</h3>
         
-        <p class="link">Object</p>
+        <p class="link"><a href="BaseTester.html">Wait::BaseTester</a></p>
         
       </div>
       
@@ -58,28 +58,12 @@
       
 
       
-      <!-- Namespace Contents -->
-      <div id="namespace-list-section" class="section">
-        <h3 class="section-header">Namespace</h3>
-        <ul class="link-list">
-          
-          <li><span class="type">CLASS</span> <a href="TruthyTester/ResultNotTruthy.html">Wait::TruthyTester::ResultNotTruthy</a></li>
-          
-        </ul>
-      </div>
-      
 
       
       <!-- Method Quickref -->
       <div id="method-list-section" class="section">
         <h3 class="section-header">Methods</h3>
         <ul class="link-list">
-          
-          <li><a href="#method-c-exceptions">::exceptions</a></li>
-          
-          <li><a href="#method-c-new">::new</a></li>
-          
-          <li><a href="#method-i-raise_unless_valid">#raise_unless_valid</a></li>
           
           <li><a href="#method-i-valid-3F">#valid?</a></li>
           
@@ -126,19 +110,33 @@
         
           <li><a href="../Wait.html">Wait</a></li>
         
-          <li><a href="../Wait/AttemptCounter.html">Wait::AttemptCounter</a></li>
+          <li><a href="../Wait/BaseCounter.html">Wait::BaseCounter</a></li>
+        
+          <li><a href="../Wait/BaseDelayer.html">Wait::BaseDelayer</a></li>
+        
+          <li><a href="../Wait/BaseLogger.html">Wait::BaseLogger</a></li>
+        
+          <li><a href="../Wait/BaseRaiser.html">Wait::BaseRaiser</a></li>
+        
+          <li><a href="../Wait/BaseRescuer.html">Wait::BaseRescuer</a></li>
+        
+          <li><a href="../Wait/BaseTester.html">Wait::BaseTester</a></li>
+        
+          <li><a href="../Wait/DebugLogger.html">Wait::DebugLogger</a></li>
         
           <li><a href="../Wait/ExponentialDelayer.html">Wait::ExponentialDelayer</a></li>
         
-          <li><a href="../Wait/NoResultError.html">Wait::NoResultError</a></li>
+          <li><a href="../Wait/InvalidResult.html">Wait::InvalidResult</a></li>
+        
+          <li><a href="../Wait/PassiveRaiser.html">Wait::PassiveRaiser</a></li>
+        
+          <li><a href="../Wait/PassiveTester.html">Wait::PassiveTester</a></li>
         
           <li><a href="../Wait/RegularDelayer.html">Wait::RegularDelayer</a></li>
         
           <li><a href="../Wait/TimeoutError.html">Wait::TimeoutError</a></li>
         
           <li><a href="../Wait/TruthyTester.html">Wait::TruthyTester</a></li>
-        
-          <li><a href="../Wait/TruthyTester/ResultNotTruthy.html">Wait::TruthyTester::ResultNotTruthy</a></li>
         
           <li><a href="../WaitTest.html">WaitTest</a></li>
         
@@ -175,113 +173,8 @@
 
       <!-- Methods -->
       
-      <div id="public-class-method-details" class="method-section section">
-        <h3 class="section-header">Public Class Methods</h3>
-
-      
-        <div id="exceptions-method" class="method-detail ">
-          <a name="method-c-exceptions"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">exceptions</span><span
-              class="method-args">()</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            
-            
-
-            
-            <div class="method-source-code" id="exceptions-source">
-<pre>
-<span class="ruby-comment"># File lib/wait.rb, line 199</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">exceptions</span>
-  [<span class="ruby-constant">ResultNotTruthy</span>]
-<span class="ruby-keyword">end</span></pre>
-            </div><!-- exceptions-source -->
-            
-          </div>
-
-          
-
-          
-        </div><!-- exceptions-method -->
-
-      
-        <div id="new-method" class="method-detail ">
-          <a name="method-c-new"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">new</span><span
-              class="method-args">(result = nil)</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            
-            
-
-            
-            <div class="method-source-code" id="new-source">
-<pre>
-<span class="ruby-comment"># File lib/wait.rb, line 203</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">result</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-ivar">@result</span> = <span class="ruby-identifier">result</span>
-<span class="ruby-keyword">end</span></pre>
-            </div><!-- new-source -->
-            
-          </div>
-
-          
-
-          
-        </div><!-- new-method -->
-
-      
-      </div><!-- public-class-method-details -->
-    
       <div id="public-instance-method-details" class="method-section section">
         <h3 class="section-header">Public Instance Methods</h3>
-
-      
-        <div id="raise_unless_valid-method" class="method-detail ">
-          <a name="method-i-raise_unless_valid"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">raise_unless_valid</span><span
-              class="method-args">()</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            
-            
-
-            
-            <div class="method-source-code" id="raise_unless_valid-source">
-<pre>
-<span class="ruby-comment"># File lib/wait.rb, line 207</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">raise_unless_valid</span>
-  <span class="ruby-identifier">valid?</span> <span class="ruby-operator">?</span> <span class="ruby-ivar">@result</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">raise</span>(<span class="ruby-constant">ResultNotTruthy</span>, <span class="ruby-ivar">@result</span>.<span class="ruby-identifier">inspect</span>)
-<span class="ruby-keyword">end</span></pre>
-            </div><!-- raise_unless_valid-source -->
-            
-          </div>
-
-          
-
-          
-        </div><!-- raise_unless_valid-method -->
 
       
         <div id="valid-3F-method" class="method-detail ">
@@ -303,7 +196,7 @@
             
             <div class="method-source-code" id="valid-3F-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 211</span>
+<span class="ruby-comment"># File lib/testers/truthy.rb, line 3</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">valid?</span>
   <span class="ruby-keyword">not</span> (<span class="ruby-ivar">@result</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">or</span> <span class="ruby-ivar">@result</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>)
 <span class="ruby-keyword">end</span></pre>

@@ -5,7 +5,7 @@
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 
-  <title>Class: Wait::ExponentialDelayer</title>
+  <title>Class: Wait::BaseLogger</title>
 
   <link rel="stylesheet" href="../rdoc.css" type="text/css" media="screen" />
 
@@ -34,8 +34,8 @@
         <div class="section-body">
           <ul>
           
-            <li><a href="../lib/delayers/exponential_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
-              class="thickbox" title="lib/delayers/exponential.rb">lib/delayers/exponential.rb</a></li>
+            <li><a href="../lib/loggers/base_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/loggers/base.rb">lib/loggers/base.rb</a></li>
           
           </ul>
         </div>
@@ -50,7 +50,7 @@
       <div id="parent-class-section" class="section">
         <h3 class="section-header">Parent</h3>
         
-        <p class="link">RegularDelayer</p>
+        <p class="link">Object</p>
         
       </div>
       
@@ -65,9 +65,13 @@
         <h3 class="section-header">Methods</h3>
         <ul class="link-list">
           
-          <li><a href="#method-i-increment">#increment</a></li>
+          <li><a href="#method-c-new">::new</a></li>
           
-          <li><a href="#method-i-sleep">#sleep</a></li>
+          <li><a href="#method-i-backtrace">#backtrace</a></li>
+          
+          <li><a href="#method-i-formatter">#formatter</a></li>
+          
+          <li><a href="#method-i-level">#level</a></li>
           
         </ul>
       </div>
@@ -155,7 +159,7 @@
   </div>
 
   <div id="documentation">
-    <h1 class="class">Wait::ExponentialDelayer</h1>
+    <h1 class="class">Wait::BaseLogger</h1>
 
     <div id="description" class="description">
       
@@ -172,20 +176,83 @@
       
 
       
+      <!-- Attributes -->
+      <div id="attribute-method-details" class="method-section section">
+        <h3 class="section-header">Attributes</h3>
+
+        
+        <div id="logger-attribute-method" class="method-detail">
+          <a name="logger"></a>
+          
+          <div class="method-heading attribute-method-heading">
+            <span class="method-name">logger</span><span
+              class="attribute-access-type">[R]</span>
+          </div>
+
+          <div class="method-description">
+          
+          
+          
+          </div>
+        </div>
+        
+      </div><!-- attribute-method-details -->
+      
 
       <!-- Methods -->
       
+      <div id="public-class-method-details" class="method-section section">
+        <h3 class="section-header">Public Class Methods</h3>
+
+      
+        <div id="new-method" class="method-detail ">
+          <a name="method-c-new"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="new-source">
+<pre>
+<span class="ruby-comment"># File lib/loggers/base.rb, line 12</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
+  <span class="ruby-ivar">@logger</span>           = <span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">STDOUT</span>)
+  <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">level</span>     = <span class="ruby-identifier">level</span>
+  <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">formatter</span> = <span class="ruby-identifier">formatter</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- new-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- new-method -->
+
+      
+      </div><!-- public-class-method-details -->
+    
       <div id="public-instance-method-details" class="method-section section">
         <h3 class="section-header">Public Instance Methods</h3>
 
       
-        <div id="increment-method" class="method-detail ">
-          <a name="method-i-increment"></a>
+        <div id="backtrace-method" class="method-detail ">
+          <a name="method-i-backtrace"></a>
 
           
           <div class="method-heading">
-            <span class="method-name">increment</span><span
-              class="method-args">()</span>
+            <span class="method-name">backtrace</span><span
+              class="method-args">(backtrace)</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
           
@@ -196,28 +263,28 @@
             
 
             
-            <div class="method-source-code" id="increment-source">
+            <div class="method-source-code" id="backtrace-source">
 <pre>
-<span class="ruby-comment"># File lib/delayers/exponential.rb, line 8</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">increment</span>
-  <span class="ruby-ivar">@delay</span> <span class="ruby-operator">*=</span> <span class="ruby-value">2</span>
+<span class="ruby-comment"># File lib/loggers/base.rb, line 28</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">backtrace</span>(<span class="ruby-identifier">backtrace</span>)
+  <span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span> (<span class="ruby-string">&quot; &quot;</span> * <span class="ruby-value">25</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">line</span> }.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;\n&quot;</span>)
 <span class="ruby-keyword">end</span></pre>
-            </div><!-- increment-source -->
+            </div><!-- backtrace-source -->
             
           </div>
 
           
 
           
-        </div><!-- increment-method -->
+        </div><!-- backtrace-method -->
 
       
-        <div id="sleep-method" class="method-detail ">
-          <a name="method-i-sleep"></a>
+        <div id="formatter-method" class="method-detail ">
+          <a name="method-i-formatter"></a>
 
           
           <div class="method-heading">
-            <span class="method-name">sleep</span><span
+            <span class="method-name">formatter</span><span
               class="method-args">()</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
@@ -229,21 +296,55 @@
             
 
             
-            <div class="method-source-code" id="sleep-source">
+            <div class="method-source-code" id="formatter-source">
 <pre>
-<span class="ruby-comment"># File lib/delayers/exponential.rb, line 3</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">sleep</span>
-  <span class="ruby-keyword">super</span>
-  <span class="ruby-identifier">increment</span>
+<span class="ruby-comment"># File lib/loggers/base.rb, line 22</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">formatter</span>
+  <span class="ruby-identifier">proc</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">severity</span>, <span class="ruby-identifier">datetime</span>, <span class="ruby-identifier">program_name</span>, <span class="ruby-identifier">message</span><span class="ruby-operator">|</span>
+    [<span class="ruby-identifier">severity</span>.<span class="ruby-identifier">ljust</span>(<span class="ruby-value">5</span>), <span class="ruby-identifier">message</span>].<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot; &quot;</span>) <span class="ruby-operator">+</span> <span class="ruby-string">&quot;\n&quot;</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
-            </div><!-- sleep-source -->
+            </div><!-- formatter-source -->
             
           </div>
 
           
 
           
-        </div><!-- sleep-method -->
+        </div><!-- formatter-method -->
+
+      
+        <div id="level-method" class="method-detail ">
+          <a name="method-i-level"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">level</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="level-source">
+<pre>
+<span class="ruby-comment"># File lib/loggers/base.rb, line 18</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">level</span>
+  <span class="ruby-operator">::</span><span class="ruby-constant">Logger</span><span class="ruby-operator">::</span><span class="ruby-constant">WARN</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- level-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- level-method -->
 
       
       </div><!-- public-instance-method-details -->

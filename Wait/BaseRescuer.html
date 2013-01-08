@@ -5,7 +5,7 @@
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 
-  <title>Class: Wait::ExponentialDelayer</title>
+  <title>Class: Wait::BaseRescuer</title>
 
   <link rel="stylesheet" href="../rdoc.css" type="text/css" media="screen" />
 
@@ -34,8 +34,8 @@
         <div class="section-body">
           <ul>
           
-            <li><a href="../lib/delayers/exponential_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
-              class="thickbox" title="lib/delayers/exponential.rb">lib/delayers/exponential.rb</a></li>
+            <li><a href="../lib/rescuers/base_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/rescuers/base.rb">lib/rescuers/base.rb</a></li>
           
           </ul>
         </div>
@@ -50,7 +50,7 @@
       <div id="parent-class-section" class="section">
         <h3 class="section-header">Parent</h3>
         
-        <p class="link">RegularDelayer</p>
+        <p class="link">Object</p>
         
       </div>
       
@@ -65,9 +65,9 @@
         <h3 class="section-header">Methods</h3>
         <ul class="link-list">
           
-          <li><a href="#method-i-increment">#increment</a></li>
+          <li><a href="#method-c-new">::new</a></li>
           
-          <li><a href="#method-i-sleep">#sleep</a></li>
+          <li><a href="#method-i-log">#log</a></li>
           
         </ul>
       </div>
@@ -155,7 +155,7 @@
   </div>
 
   <div id="documentation">
-    <h1 class="class">Wait::ExponentialDelayer</h1>
+    <h1 class="class">Wait::BaseRescuer</h1>
 
     <div id="description" class="description">
       
@@ -172,78 +172,106 @@
       
 
       
+      <!-- Attributes -->
+      <div id="attribute-method-details" class="method-section section">
+        <h3 class="section-header">Attributes</h3>
+
+        
+        <div id="exceptions-attribute-method" class="method-detail">
+          <a name="exceptions"></a>
+          
+          <div class="method-heading attribute-method-heading">
+            <span class="method-name">exceptions</span><span
+              class="attribute-access-type">[R]</span>
+          </div>
+
+          <div class="method-description">
+          
+          
+          
+          </div>
+        </div>
+        
+      </div><!-- attribute-method-details -->
+      
 
       <!-- Methods -->
       
+      <div id="public-class-method-details" class="method-section section">
+        <h3 class="section-header">Public Class Methods</h3>
+
+      
+        <div id="new-method" class="method-detail ">
+          <a name="method-c-new"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(logger, *exceptions)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="new-source">
+<pre>
+<span class="ruby-comment"># File lib/rescuers/base.rb, line 5</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">logger</span>, *<span class="ruby-identifier">exceptions</span>)
+  <span class="ruby-ivar">@logger</span>     = <span class="ruby-identifier">logger</span>
+  <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">Array</span>(<span class="ruby-identifier">exceptions</span>).<span class="ruby-identifier">flatten</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- new-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- new-method -->
+
+      
+      </div><!-- public-class-method-details -->
+    
       <div id="public-instance-method-details" class="method-section section">
         <h3 class="section-header">Public Instance Methods</h3>
 
       
-        <div id="increment-method" class="method-detail ">
-          <a name="method-i-increment"></a>
+        <div id="log-method" class="method-detail ">
+          <a name="method-i-log"></a>
 
           
           <div class="method-heading">
-            <span class="method-name">increment</span><span
-              class="method-args">()</span>
+            <span class="method-name">log</span><span
+              class="method-args">(exception)</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
           
 
           <div class="method-description">
             
-            
+            <p>Logs an exception.</p>
             
 
             
-            <div class="method-source-code" id="increment-source">
+            <div class="method-source-code" id="log-source">
 <pre>
-<span class="ruby-comment"># File lib/delayers/exponential.rb, line 8</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">increment</span>
-  <span class="ruby-ivar">@delay</span> <span class="ruby-operator">*=</span> <span class="ruby-value">2</span>
+<span class="ruby-comment"># File lib/rescuers/base.rb, line 11</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">log</span>(<span class="ruby-identifier">exception</span>)
+  <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;[Rescuer] rescued: #{exception.class.name}: #{exception.message}\n#{@logger.backtrace(exception.backtrace)}&quot;</span>
 <span class="ruby-keyword">end</span></pre>
-            </div><!-- increment-source -->
+            </div><!-- log-source -->
             
           </div>
 
           
 
           
-        </div><!-- increment-method -->
-
-      
-        <div id="sleep-method" class="method-detail ">
-          <a name="method-i-sleep"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">sleep</span><span
-              class="method-args">()</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            
-            
-
-            
-            <div class="method-source-code" id="sleep-source">
-<pre>
-<span class="ruby-comment"># File lib/delayers/exponential.rb, line 3</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">sleep</span>
-  <span class="ruby-keyword">super</span>
-  <span class="ruby-identifier">increment</span>
-<span class="ruby-keyword">end</span></pre>
-            </div><!-- sleep-source -->
-            
-          </div>
-
-          
-
-          
-        </div><!-- sleep-method -->
+        </div><!-- log-method -->
 
       
       </div><!-- public-instance-method-details -->

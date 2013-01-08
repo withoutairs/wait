@@ -46,19 +46,33 @@
     
     <li class="class"><a href="Wait.html">Wait</a></li>
     
-    <li class="class"><a href="Wait/AttemptCounter.html">Wait::AttemptCounter</a></li>
+    <li class="class"><a href="Wait/BaseCounter.html">Wait::BaseCounter</a></li>
+    
+    <li class="class"><a href="Wait/BaseDelayer.html">Wait::BaseDelayer</a></li>
+    
+    <li class="class"><a href="Wait/BaseLogger.html">Wait::BaseLogger</a></li>
+    
+    <li class="class"><a href="Wait/BaseRaiser.html">Wait::BaseRaiser</a></li>
+    
+    <li class="class"><a href="Wait/BaseRescuer.html">Wait::BaseRescuer</a></li>
+    
+    <li class="class"><a href="Wait/BaseTester.html">Wait::BaseTester</a></li>
+    
+    <li class="class"><a href="Wait/DebugLogger.html">Wait::DebugLogger</a></li>
     
     <li class="class"><a href="Wait/ExponentialDelayer.html">Wait::ExponentialDelayer</a></li>
     
-    <li class="class"><a href="Wait/NoResultError.html">Wait::NoResultError</a></li>
+    <li class="class"><a href="Wait/InvalidResult.html">Wait::InvalidResult</a></li>
+    
+    <li class="class"><a href="Wait/PassiveRaiser.html">Wait::PassiveRaiser</a></li>
+    
+    <li class="class"><a href="Wait/PassiveTester.html">Wait::PassiveTester</a></li>
     
     <li class="class"><a href="Wait/RegularDelayer.html">Wait::RegularDelayer</a></li>
     
     <li class="class"><a href="Wait/TimeoutError.html">Wait::TimeoutError</a></li>
     
     <li class="class"><a href="Wait/TruthyTester.html">Wait::TruthyTester</a></li>
-    
-    <li class="class"><a href="Wait/TruthyTester/ResultNotTruthy.html">Wait::TruthyTester::ResultNotTruthy</a></li>
     
     <li class="class"><a href="WaitTest.html">WaitTest</a></li>
     
@@ -71,39 +85,55 @@
   <h2 id="methods">Methods</h2>
   <ul>
     
-      <li><a href="Wait/TruthyTester.html#method-c-exceptions">::exceptions &mdash; Wait::TruthyTester</a></li>
-    
       <li><a href="Wait.html#method-c-new">::new &mdash; Wait</a></li>
     
-      <li><a href="Wait/AttemptCounter.html#method-c-new">::new &mdash; Wait::AttemptCounter</a></li>
+      <li><a href="Wait/BaseLogger.html#method-c-new">::new &mdash; Wait::BaseLogger</a></li>
     
-      <li><a href="Wait/TruthyTester.html#method-c-new">::new &mdash; Wait::TruthyTester</a></li>
+      <li><a href="Wait/BaseCounter.html#method-c-new">::new &mdash; Wait::BaseCounter</a></li>
     
-      <li><a href="Wait/RegularDelayer.html#method-c-new">::new &mdash; Wait::RegularDelayer</a></li>
+      <li><a href="Wait/BaseTester.html#method-c-new">::new &mdash; Wait::BaseTester</a></li>
+    
+      <li><a href="Wait/BaseRaiser.html#method-c-new">::new &mdash; Wait::BaseRaiser</a></li>
+    
+      <li><a href="Wait/BaseDelayer.html#method-c-new">::new &mdash; Wait::BaseDelayer</a></li>
+    
+      <li><a href="Wait/BaseRescuer.html#method-c-new">::new &mdash; Wait::BaseRescuer</a></li>
+    
+      <li><a href="Wait/BaseLogger.html#method-i-backtrace">#backtrace &mdash; Wait::BaseLogger</a></li>
+    
+      <li><a href="Wait/BaseLogger.html#method-i-formatter">#formatter &mdash; Wait::BaseLogger</a></li>
     
       <li><a href="Wait/ExponentialDelayer.html#method-i-increment">#increment &mdash; Wait::ExponentialDelayer</a></li>
     
-      <li><a href="Wait/AttemptCounter.html#method-i-increment">#increment &mdash; Wait::AttemptCounter</a></li>
+      <li><a href="Wait/BaseCounter.html#method-i-increment">#increment &mdash; Wait::BaseCounter</a></li>
     
-      <li><a href="Wait/AttemptCounter.html#method-i-last_attempt-3F">#last_attempt? &mdash; Wait::AttemptCounter</a></li>
+      <li><a href="Wait/BaseCounter.html#method-i-last_attempt-3F">#last_attempt? &mdash; Wait::BaseCounter</a></li>
     
-      <li><a href="Wait.html#method-i-logger">#logger &mdash; Wait</a></li>
+      <li><a href="Wait/BaseLogger.html#method-i-level">#level &mdash; Wait::BaseLogger</a></li>
     
-      <li><a href="Wait/TruthyTester.html#method-i-raise_unless_valid">#raise_unless_valid &mdash; Wait::TruthyTester</a></li>
+      <li><a href="Wait/DebugLogger.html#method-i-level">#level &mdash; Wait::DebugLogger</a></li>
     
-      <li><a href="Wait/AttemptCounter.html#method-i-reset">#reset &mdash; Wait::AttemptCounter</a></li>
+      <li><a href="Wait/BaseTester.html#method-i-log">#log &mdash; Wait::BaseTester</a></li>
+    
+      <li><a href="Wait/BaseRaiser.html#method-i-log">#log &mdash; Wait::BaseRaiser</a></li>
+    
+      <li><a href="Wait/BaseCounter.html#method-i-log">#log &mdash; Wait::BaseCounter</a></li>
+    
+      <li><a href="Wait/BaseRescuer.html#method-i-log">#log &mdash; Wait::BaseRescuer</a></li>
+    
+      <li><a href="Wait/BaseDelayer.html#method-i-log_delay">#log_delay &mdash; Wait::BaseDelayer</a></li>
+    
+      <li><a href="Wait/BaseRaiser.html#method-i-raise-3F">#raise? &mdash; Wait::BaseRaiser</a></li>
+    
+      <li><a href="Wait/BaseCounter.html#method-i-reset">#reset &mdash; Wait::BaseCounter</a></li>
+    
+      <li><a href="Wait/BaseDelayer.html#method-i-sleep">#sleep &mdash; Wait::BaseDelayer</a></li>
     
       <li><a href="Wait/ExponentialDelayer.html#method-i-sleep">#sleep &mdash; Wait::ExponentialDelayer</a></li>
     
-      <li><a href="Wait/RegularDelayer.html#method-i-sleep">#sleep &mdash; Wait::RegularDelayer</a></li>
-    
       <li><a href="WaitTest.html#method-i-test_exponential_delayer">#test_exponential_delayer &mdash; WaitTest</a></li>
     
-      <li><a href="WaitTest.html#method-i-test_invalid_delay_strategy">#test_invalid_delay_strategy &mdash; WaitTest</a></li>
-    
       <li><a href="WaitTest.html#method-i-test_invalid_number_of_attempts">#test_invalid_number_of_attempts &mdash; WaitTest</a></li>
-    
-      <li><a href="WaitTest.html#method-i-test_invalid_tester_strategy">#test_invalid_tester_strategy &mdash; WaitTest</a></li>
     
       <li><a href="WaitTest.html#method-i-test_not_rescuing_exception_not_specified_by_rescue_option">#test_not_rescuing_exception_not_specified_by_rescue_option &mdash; WaitTest</a></li>
     
@@ -125,15 +155,15 @@
     
       <li><a href="WaitTest.html#method-i-test_result">#test_result &mdash; WaitTest</a></li>
     
-      <li><a href="Wait/RegularDelayer.html#method-i-to_s">#to_s &mdash; Wait::RegularDelayer</a></li>
+      <li><a href="Wait/BaseCounter.html#method-i-to_s">#to_s &mdash; Wait::BaseCounter</a></li>
     
-      <li><a href="Wait/AttemptCounter.html#method-i-to_s">#to_s &mdash; Wait::AttemptCounter</a></li>
+      <li><a href="Wait/BaseDelayer.html#method-i-to_s">#to_s &mdash; Wait::BaseDelayer</a></li>
     
       <li><a href="Wait.html#method-i-until">#until &mdash; Wait</a></li>
     
       <li><a href="Wait/TruthyTester.html#method-i-valid-3F">#valid? &mdash; Wait::TruthyTester</a></li>
     
-      <li><a href="Wait.html#method-i-validate_strategies">#validate_strategies &mdash; Wait</a></li>
+      <li><a href="Wait/BaseTester.html#method-i-valid-3F">#valid? &mdash; Wait::BaseTester</a></li>
     
   </ul>
 
