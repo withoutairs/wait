@@ -13,7 +13,7 @@ The wait gem executes a block until there's a valid (by default, truthy) result.
 Add to your `Gemfile`:
 
 ```ruby
-gem "wait", "~> 0.3.2"
+gem "wait", "~> 0.4"
 ```
 
 ## Examples
