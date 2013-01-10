@@ -1,9 +1,9 @@
 class Wait
   class BaseCounter
-    attr_reader :attempt
+    attr_accessor :logger
+    attr_reader   :attempt
 
-    def initialize(logger, total)
-      @logger = logger
+    def initialize(total)
       # Attempt to prevent causing an infinite loop by being very strict about
       # the value passed.
       unless total.is_a?(Fixnum) and total > 0
@@ -11,7 +11,6 @@ class Wait
       end
 
       @total = total
-      reset
     end
 
     # Called before all attempts to reset the counter.
@@ -32,7 +31,9 @@ class Wait
 
     # Logs the current attempt count.
     def log
-      @logger.debug "[Counter] attempt #{self}"
+      return if @logger.nil?
+
+      @logger.debug("Counter") { "attempt #{self}" }
     end
 
     # Returns a string representation of the current count.

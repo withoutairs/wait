@@ -1,5 +1,5 @@
-require 'test/unit'
-require 'wait'
+require "test/unit"
+require "wait"
 
 class WaitTest < Test::Unit::TestCase
   # An exception used for testing (1/2).
@@ -19,12 +19,12 @@ class WaitTest < Test::Unit::TestCase
     assert_equal "foo", result
   end
 
-  # Test that Wait::InvalidResult is raised when the last attempt returns a
+  # Test that Wait::ResultInvalid is raised when the last attempt returns a
   # non-truthy result.
   def test_raising_non_truthy_result
     options = {:delay => DELAY, :attempts => 1}
     wait = Wait.new(options)
-    assert_raise Wait::InvalidResult do
+    assert_raise Wait::ResultInvalid do
       wait.until { nil }
     end
   end
@@ -53,9 +53,9 @@ class WaitTest < Test::Unit::TestCase
   def test_regular_delayer
     # Set up the initial delay value and strategy to use.
     delay = 0.1
-    delayer = Wait::RegularDelayer
+    delayer = Wait::RegularDelayer.new(delay)
     attempts = 4
-    options = {:delay => delay, :delayer => delayer, :attempts => attempts}
+    options = {:delayer => delayer, :attempts => attempts}
     wait = Wait.new(options)
 
     # Initialize a variable to store timing information.
@@ -80,9 +80,9 @@ class WaitTest < Test::Unit::TestCase
   def test_exponential_delayer
     # Set up the initial delay value and strategy to use.
     delay = 0.1
-    delayer = Wait::ExponentialDelayer
+    delayer = Wait::ExponentialDelayer.new(delay)
     attempts = 4
-    options = {:delay => delay, :delayer => delayer, :attempts => attempts}
+    options = {:delayer => delayer, :attempts => attempts}
     wait = Wait.new(options)
 
     # Initialize a variable to store timing information.

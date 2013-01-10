@@ -3,6 +3,7 @@ require "logger"
 require "forwardable"
 
 paths = %w(
+  version
   loggers/base
   loggers/debug
   counters/base

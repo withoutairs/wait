@@ -1,7 +1,9 @@
 class Wait
   class SignalRaiser < BaseRaiser
-    def raise?
-      signal_exception?(@exception.class)
+    def raise?(exception)
+      signal_exception?(exception.class).tap do |raising|
+        log(exception, raising)
+      end
     end
 
     # Returns +true+ if an exception raised is a signal exception.

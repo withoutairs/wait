@@ -1,18 +1,18 @@
 class Wait
   class BaseRaiser
-    def initialize(logger, exception)
-      @logger    = logger
-      @exception = exception
-      log
-    end
+    attr_accessor :logger
 
     # Returns +true+ if an exception ought to be raised.
-    def raise?
-      false
+    def raise?(exception)
+      false.tap do |raising|
+        log(exception, raising)
+      end
     end
 
-    def log
-      @logger.debug "[Raiser] raise? #{@exception.class.name}: #{raise?}"
+    def log(exception, raising)
+      return if @logger.nil?
+
+      @logger.debug("Raiser") { "#{"not " unless raising}raising: #{exception.class.name}" }
     end
   end # BaseRaiser
 end # Wait

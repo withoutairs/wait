@@ -46,17 +46,23 @@ class Wait
   #   Wait::SignalRaiser.
   #
   def initialize(options = {})
-    debug       = options[:debug]    || false
-    @logger     = (options[:logger]  || (debug ? DebugLogger : DEFAULT[:logger])).new
-    attempts    = options[:attempts] || DEFAULT[:attempts]
-    @counter    = (options[:counter] || DEFAULT[:counter]).new(@logger, attempts)
-    @timeout    = options[:timeout]  || DEFAULT[:timeout]
-    delay       = options[:delay]    || DEFAULT[:delay]
-    @delayer    = (options[:delayer] || DEFAULT[:delayer]).new(@logger, delay)
-    exceptions  = options[:rescue]
-    @rescuer    = (options[:rescuer] || DEFAULT[:rescuer]).new(@logger, exceptions)
-    @tester     = options[:tester]   || DEFAULT[:tester]
-    @raiser     = options[:raiser]   || DEFAULT[:raiser]
+    # Assign defaults.
+    debug      = options[:debug]    || false
+    @logger    = options[:logger]   || (debug ? DebugLogger : DEFAULT[:logger]).new
+    attempts   = options[:attempts] || DEFAULT[:attempts]
+    @counter   = options[:counter]  || DEFAULT[:counter].new(attempts)
+    @timeout   = options[:timeout]  || DEFAULT[:timeout]
+    delay      = options[:delay]    || DEFAULT[:delay]
+    @delayer   = options[:delayer]  || DEFAULT[:delayer].new(delay)
+    exceptions = options[:rescue]
+    @rescuer   = options[:rescuer]  || DEFAULT[:rescuer].new(exceptions)
+    @tester    = options[:tester]   || DEFAULT[:tester].new
+    @raiser    = options[:raiser]   || DEFAULT[:raiser].new
+
+    # Assign the logger to each of the strategies.
+    [@counter, @delayer, @rescuer, @tester, @raiser].each do |strategy|
+      strategy.logger = @logger if strategy.respond_to?(:logger=)
+    end
   end
 
   # == Description
@@ -74,12 +80,12 @@ class Wait
   #   # => #<Wait>
   #   wait.until { Time.now.sec.even? }
   #   # [Counter] attempt 1/5
-  #   # [Tester] result: false
-  #   # [Rescuer] rescued: Wait::InvalidResult: Wait::InvalidResult
-  #   # [Raiser] raise? Wait::InvalidResult: false
+  #   # [Tester]  result: false
+  #   # [Rescuer] rescued: Wait::ResultInvalid
+  #   # [Raiser]  not raising: Wait::ResultInvalid
   #   # [Delayer] delaying for 1s
   #   # [Counter] attempt 2/5
-  #   # [Tester] result: true
+  #   # [Tester]  result: true
   #   # => true
   #
   # If you wish to handle an exception by attempting the block again, pass one
@@ -95,16 +101,16 @@ class Wait
   #     end
   #   end
   #   # [Counter] attempt 1/5
-  #   # [Tester] result: nil
-  #   # [Rescuer] rescued: Wait::InvalidResult: Wait::InvalidResult
-  #   # [Raiser] raise? Wait::InvalidResult: false
+  #   # [Tester]  result: nil
+  #   # [Rescuer] rescued: Wait::ResultInvalid
+  #   # [Raiser]  not raising: Wait::ResultInvalid
   #   # [Delayer] delaying for 1s
   #   # [Counter] attempt 2/5
-  #   # [Rescuer] rescued: RuntimeError: RuntimeError
-  #   # [Raiser] raise? RuntimeError: false
+  #   # [Rescuer] rescued: RuntimeError
+  #   # [Raiser]  not raising: RuntimeError
   #   # [Delayer] delaying for 1s
   #   # [Counter] attempt 3/5
-  #   # [Tester] result: "foo"
+  #   # [Tester]  result: "foo"
   #   # => "foo"
   #
   # == Returns
@@ -127,14 +133,12 @@ class Wait
         yield(@counter.attempt)
       end
       # Raise an exception unless the result is valid.
-      tester = @tester.new(@logger, result)
-      tester.valid? ? result : raise(InvalidResult)
-    rescue TimeoutError, InvalidResult, *@rescuer.exceptions => exception
+      @tester.valid?(result) ? result : raise(ResultInvalid)
+    rescue TimeoutError, ResultInvalid, *@rescuer.exceptions => exception
       # Log the exception.
       @rescuer.log(exception)
       # Raise the exception if it ought to be.
-      raiser = @raiser.new(@logger, exception)
-      raise(exception) if raiser.raise?
+      raise(exception) if @raiser.raise?(exception)
       # Raise the exception if this was the last attempt.
       raise(exception) if @counter.last_attempt?
       # Sleep before the next attempt.
@@ -148,5 +152,5 @@ class Wait
   class TimeoutError < Timeout::Error; end
 
   # Raised when a block returns an invalid result.
-  class InvalidResult < RuntimeError; end
+  class ResultInvalid < RuntimeError; end
 end #Wait

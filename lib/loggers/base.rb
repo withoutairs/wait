@@ -2,7 +2,7 @@ class Wait
   class BaseLogger
     extend Forwardable
 
-    attr_reader :logger
+    attr_reader    :logger
     def_delegators :logger, :fatal,
                             :error,
                             :warn,
@@ -20,13 +20,13 @@ class Wait
     end
 
     def formatter
-      proc do |severity, datetime, program_name, message|
-        [severity.ljust(5), message].join(" ") + "\n"
+      proc do |severity, datetime, caller, message|
+        "#{severity.ljust(5)} #{"[#{caller}]".ljust(9)} #{message}\n"
       end
     end
 
-    def backtrace(backtrace)
-      backtrace.map { |line| (" " * 25) + line }.join("\n")
+    def indent(lines, spaces = 25)
+      lines.map { |line| (" " * spaces) + line }.join("\n")
     end
   end # Logger
 end # Wait

@@ -1,19 +1,22 @@
 class Wait
   class BaseDelayer
-    def initialize(logger, initial_delay)
-      @logger = logger
-      @delay  = initial_delay
+    attr_accessor :logger
+
+    def initialize(delay)
+      @delay = delay
     end
 
     # Called before a reattempt to sleep a certain about of time.
     def sleep
-      log_delay
+      log
       Kernel.sleep(@delay)
     end
 
     # Logs how long the delay is.
-    def log_delay
-      @logger.debug "[Delayer] delaying for #{self}"
+    def log
+      return if @logger.nil?
+
+      @logger.debug("Delayer") { "delaying for #{self}" }
     end
 
     # Returns a string representation of the delay.

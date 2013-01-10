@@ -23,12 +23,12 @@ wait = Wait.new
 # => #<Wait>
 wait.until { Time.now.sec.even? }
 # [Counter] attempt 1/5
-# [Tester] result: false
-# [Rescuer] rescued: Wait::InvalidResult: Wait::InvalidResult
-# [Raiser] raise? Wait::InvalidResult: false
+# [Tester]  result: false
+# [Rescuer] rescued: Wait::ResultInvalid
+# [Raiser]  not raising: Wait::ResultInvalid
 # [Delayer] delaying for 1s
 # [Counter] attempt 2/5
-# [Tester] result: true
+# [Tester]  result: true
 # => true
 ```
 
@@ -45,16 +45,16 @@ wait.until do |attempt|
   end
 end
 # [Counter] attempt 1/5
-# [Tester] result: nil
-# [Rescuer] rescued: Wait::InvalidResult: Wait::InvalidResult
-# [Raiser] raise? Wait::InvalidResult: false
+# [Tester]  result: nil
+# [Rescuer] rescued: Wait::ResultInvalid
+# [Raiser]  not raising: Wait::ResultInvalid
 # [Delayer] delaying for 1s
 # [Counter] attempt 2/5
-# [Rescuer] rescued: RuntimeError: RuntimeError
-# [Raiser] raise? RuntimeError: false
+# [Rescuer] rescued: RuntimeError
+# [Raiser]  not raising: RuntimeError
 # [Delayer] delaying for 1s
 # [Counter] attempt 3/5
-# [Tester] result: "foo"
+# [Tester]  result: "foo"
 # => "foo"
 ```
 
