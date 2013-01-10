@@ -9,7 +9,7 @@ class Wait
     :delayer  => RegularDelayer,
     :rescuer  => BaseRescuer,
     :tester   => TruthyTester,
-    :raiser   => PassiveRaiser,
+    :raiser   => SignalRaiser,
     :logger   => BaseLogger
   }
 
@@ -43,7 +43,7 @@ class Wait
   #   Strategy used to test the result. Default is Wait::TruthyTester.
   # [:raiser]
   #   Strategy used to raise specific exceptions. Default is
-  #   Wait::PassiveRaiser.
+  #   Wait::SignalRaiser.
   #
   def initialize(options = {})
     debug       = options[:debug]    || false

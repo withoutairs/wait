@@ -4,10 +4,10 @@ class Wait
 
     attr_reader :logger
     def_delegators :logger, :fatal,
-                           :error,
-                           :warn,
-                           :info,
-                           :debug
+                            :error,
+                            :warn,
+                            :info,
+                            :debug
 
     def initialize
       @logger           = ::Logger.new(STDOUT)

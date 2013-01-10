@@ -87,7 +87,7 @@ end
   <dt>tester</dt>
   <dd>Strategy used to test the result. Default is <code>Wait::TruthyTester</code>.</dd>
   <dt>raiser</dt>
-  <dd>Strategy used to raise specific exceptions. Default is <code>Wait::PassiveRaiser</code>.</dd>
+  <dd>Strategy used to raise specific exceptions. Default is <code>Wait::SignalRaiser</code>.</dd>
 </dl>
 
 ## Documentation
