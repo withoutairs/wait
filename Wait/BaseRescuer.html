@@ -128,13 +128,15 @@
         
           <li><a href="../Wait/ExponentialDelayer.html">Wait::ExponentialDelayer</a></li>
         
-          <li><a href="../Wait/InvalidResult.html">Wait::InvalidResult</a></li>
-        
           <li><a href="../Wait/PassiveRaiser.html">Wait::PassiveRaiser</a></li>
         
           <li><a href="../Wait/PassiveTester.html">Wait::PassiveTester</a></li>
         
           <li><a href="../Wait/RegularDelayer.html">Wait::RegularDelayer</a></li>
+        
+          <li><a href="../Wait/ResultInvalid.html">Wait::ResultInvalid</a></li>
+        
+          <li><a href="../Wait/SignalRaiser.html">Wait::SignalRaiser</a></li>
         
           <li><a href="../Wait/TimeoutError.html">Wait::TimeoutError</a></li>
         
@@ -192,6 +194,23 @@
           </div>
         </div>
         
+        <div id="logger-attribute-method" class="method-detail">
+          <a name="logger"></a>
+          
+          <a name="logger="></a>
+          
+          <div class="method-heading attribute-method-heading">
+            <span class="method-name">logger</span><span
+              class="attribute-access-type">[RW]</span>
+          </div>
+
+          <div class="method-description">
+          
+          
+          
+          </div>
+        </div>
+        
       </div><!-- attribute-method-details -->
       
 
@@ -207,7 +226,7 @@
           
           <div class="method-heading">
             <span class="method-name">new</span><span
-              class="method-args">(logger, *exceptions)</span>
+              class="method-args">(exceptions)</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
           
@@ -220,9 +239,8 @@
             
             <div class="method-source-code" id="new-source">
 <pre>
-<span class="ruby-comment"># File lib/rescuers/base.rb, line 5</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">logger</span>, *<span class="ruby-identifier">exceptions</span>)
-  <span class="ruby-ivar">@logger</span>     = <span class="ruby-identifier">logger</span>
+<span class="ruby-comment"># File lib/rescuers/base.rb, line 6</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">exceptions</span>)
   <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">Array</span>(<span class="ruby-identifier">exceptions</span>).<span class="ruby-identifier">flatten</span>
 <span class="ruby-keyword">end</span></pre>
             </div><!-- new-source -->
@@ -262,7 +280,15 @@
 <pre>
 <span class="ruby-comment"># File lib/rescuers/base.rb, line 11</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">log</span>(<span class="ruby-identifier">exception</span>)
-  <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;[Rescuer] rescued: #{exception.class.name}: #{exception.message}\n#{@logger.backtrace(exception.backtrace)}&quot;</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">nil?</span>
+
+  <span class="ruby-identifier">klass</span> = <span class="ruby-identifier">exception</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">name</span>
+  <span class="ruby-comment"># We can omit the message if it's identical to the class name.</span>
+  <span class="ruby-identifier">message</span> = <span class="ruby-identifier">exception</span>.<span class="ruby-identifier">message</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">exception</span>.<span class="ruby-identifier">message</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">klass</span>
+  <span class="ruby-comment"># Indent the exception so it stands apart from the rest of the messages.</span>
+  <span class="ruby-identifier">backtrace</span> = <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">indent</span>(<span class="ruby-identifier">exception</span>.<span class="ruby-identifier">backtrace</span>)
+
+  <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-string">&quot;Rescuer&quot;</span>) { <span class="ruby-node">&quot;rescued: #{klass}#{&quot;: #{message}&quot; if message}\n#{backtrace}&quot;</span> }
 <span class="ruby-keyword">end</span></pre>
             </div><!-- log-source -->
             

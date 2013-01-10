@@ -126,13 +126,15 @@
         
           <li><a href="../Wait/ExponentialDelayer.html">Wait::ExponentialDelayer</a></li>
         
-          <li><a href="../Wait/InvalidResult.html">Wait::InvalidResult</a></li>
-        
           <li><a href="../Wait/PassiveRaiser.html">Wait::PassiveRaiser</a></li>
         
           <li><a href="../Wait/PassiveTester.html">Wait::PassiveTester</a></li>
         
           <li><a href="../Wait/RegularDelayer.html">Wait::RegularDelayer</a></li>
+        
+          <li><a href="../Wait/ResultInvalid.html">Wait::ResultInvalid</a></li>
+        
+          <li><a href="../Wait/SignalRaiser.html">Wait::SignalRaiser</a></li>
         
           <li><a href="../Wait/TimeoutError.html">Wait::TimeoutError</a></li>
         
@@ -183,7 +185,7 @@
           
           <div class="method-heading">
             <span class="method-name">valid?</span><span
-              class="method-args">()</span>
+              class="method-args">(result)</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
           
@@ -197,8 +199,10 @@
             <div class="method-source-code" id="valid-3F-source">
 <pre>
 <span class="ruby-comment"># File lib/testers/truthy.rb, line 3</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">valid?</span>
-  <span class="ruby-keyword">not</span> (<span class="ruby-ivar">@result</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">or</span> <span class="ruby-ivar">@result</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">valid?</span>(<span class="ruby-identifier">result</span>)
+  <span class="ruby-identifier">log</span>(<span class="ruby-identifier">result</span>)
+
+  <span class="ruby-keyword">not</span> (<span class="ruby-identifier">result</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">result</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">false</span>)
 <span class="ruby-keyword">end</span></pre>
             </div><!-- valid-3F-source -->
             

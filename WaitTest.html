@@ -160,13 +160,15 @@
         
           <li><a href="./Wait/ExponentialDelayer.html">Wait::ExponentialDelayer</a></li>
         
-          <li><a href="./Wait/InvalidResult.html">Wait::InvalidResult</a></li>
-        
           <li><a href="./Wait/PassiveRaiser.html">Wait::PassiveRaiser</a></li>
         
           <li><a href="./Wait/PassiveTester.html">Wait::PassiveTester</a></li>
         
           <li><a href="./Wait/RegularDelayer.html">Wait::RegularDelayer</a></li>
+        
+          <li><a href="./Wait/ResultInvalid.html">Wait::ResultInvalid</a></li>
+        
+          <li><a href="./Wait/SignalRaiser.html">Wait::SignalRaiser</a></li>
         
           <li><a href="./Wait/TimeoutError.html">Wait::TimeoutError</a></li>
         
@@ -248,9 +250,9 @@ exponentially.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_exponential_delayer</span>
   <span class="ruby-comment"># Set up the initial delay value and strategy to use.</span>
   <span class="ruby-identifier">delay</span> = <span class="ruby-value">0.1</span>
-  <span class="ruby-identifier">delayer</span> = <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">ExponentialDelayer</span>
+  <span class="ruby-identifier">delayer</span> = <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">ExponentialDelayer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">delay</span>)
   <span class="ruby-identifier">attempts</span> = <span class="ruby-value">4</span>
-  <span class="ruby-identifier">options</span> = {<span class="ruby-value">:delay</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">delay</span>, <span class="ruby-value">:delayer</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">delayer</span>, <span class="ruby-value">:attempts</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">attempts</span>}
+  <span class="ruby-identifier">options</span> = {<span class="ruby-value">:delayer</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">delayer</span>, <span class="ruby-value">:attempts</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">attempts</span>}
   <span class="ruby-identifier">wait</span> = <span class="ruby-constant">Wait</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>)
 
   <span class="ruby-comment"># Initialize a variable to store timing information.</span>
@@ -380,7 +382,7 @@ performed here to prevent accidentally causing an infinite loop.</p>
 
           <div class="method-description">
             
-            <p>Test that <a href="Wait/InvalidResult.html">Wait::InvalidResult</a> is
+            <p>Test that <a href="Wait/ResultInvalid.html">Wait::ResultInvalid</a> is
 raised when the last attempt returns a non-truthy result.</p>
             
 
@@ -391,7 +393,7 @@ raised when the last attempt returns a non-truthy result.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_raising_non_truthy_result</span>
   <span class="ruby-identifier">options</span> = {<span class="ruby-value">:delay</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">DELAY</span>, <span class="ruby-value">:attempts</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>}
   <span class="ruby-identifier">wait</span> = <span class="ruby-constant">Wait</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>)
-  <span class="ruby-identifier">assert_raise</span> <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">InvalidResult</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">assert_raise</span> <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">ResultInvalid</span> <span class="ruby-keyword">do</span>
     <span class="ruby-identifier">wait</span>.<span class="ruby-identifier">until</span> { <span class="ruby-keyword">nil</span> }
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
@@ -506,9 +508,9 @@ grow.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">test_regular_delayer</span>
   <span class="ruby-comment"># Set up the initial delay value and strategy to use.</span>
   <span class="ruby-identifier">delay</span> = <span class="ruby-value">0.1</span>
-  <span class="ruby-identifier">delayer</span> = <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">RegularDelayer</span>
+  <span class="ruby-identifier">delayer</span> = <span class="ruby-constant">Wait</span><span class="ruby-operator">::</span><span class="ruby-constant">RegularDelayer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">delay</span>)
   <span class="ruby-identifier">attempts</span> = <span class="ruby-value">4</span>
-  <span class="ruby-identifier">options</span> = {<span class="ruby-value">:delay</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">delay</span>, <span class="ruby-value">:delayer</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">delayer</span>, <span class="ruby-value">:attempts</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">attempts</span>}
+  <span class="ruby-identifier">options</span> = {<span class="ruby-value">:delayer</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">delayer</span>, <span class="ruby-value">:attempts</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">attempts</span>}
   <span class="ruby-identifier">wait</span> = <span class="ruby-constant">Wait</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">options</span>)
 
   <span class="ruby-comment"># Initialize a variable to store timing information.</span>

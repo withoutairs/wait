@@ -67,7 +67,7 @@
           
           <li><a href="#method-c-new">::new</a></li>
           
-          <li><a href="#method-i-log_delay">#log_delay</a></li>
+          <li><a href="#method-i-log">#log</a></li>
           
           <li><a href="#method-i-sleep">#sleep</a></li>
           
@@ -132,13 +132,15 @@
         
           <li><a href="../Wait/ExponentialDelayer.html">Wait::ExponentialDelayer</a></li>
         
-          <li><a href="../Wait/InvalidResult.html">Wait::InvalidResult</a></li>
-        
           <li><a href="../Wait/PassiveRaiser.html">Wait::PassiveRaiser</a></li>
         
           <li><a href="../Wait/PassiveTester.html">Wait::PassiveTester</a></li>
         
           <li><a href="../Wait/RegularDelayer.html">Wait::RegularDelayer</a></li>
+        
+          <li><a href="../Wait/ResultInvalid.html">Wait::ResultInvalid</a></li>
+        
+          <li><a href="../Wait/SignalRaiser.html">Wait::SignalRaiser</a></li>
         
           <li><a href="../Wait/TimeoutError.html">Wait::TimeoutError</a></li>
         
@@ -176,6 +178,30 @@
       
 
       
+      <!-- Attributes -->
+      <div id="attribute-method-details" class="method-section section">
+        <h3 class="section-header">Attributes</h3>
+
+        
+        <div id="logger-attribute-method" class="method-detail">
+          <a name="logger"></a>
+          
+          <a name="logger="></a>
+          
+          <div class="method-heading attribute-method-heading">
+            <span class="method-name">logger</span><span
+              class="attribute-access-type">[RW]</span>
+          </div>
+
+          <div class="method-description">
+          
+          
+          
+          </div>
+        </div>
+        
+      </div><!-- attribute-method-details -->
+      
 
       <!-- Methods -->
       
@@ -189,7 +215,7 @@
           
           <div class="method-heading">
             <span class="method-name">new</span><span
-              class="method-args">(logger, initial_delay)</span>
+              class="method-args">(delay)</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
           
@@ -202,10 +228,9 @@
             
             <div class="method-source-code" id="new-source">
 <pre>
-<span class="ruby-comment"># File lib/delayers/base.rb, line 3</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">logger</span>, <span class="ruby-identifier">initial_delay</span>)
-  <span class="ruby-ivar">@logger</span> = <span class="ruby-identifier">logger</span>
-  <span class="ruby-ivar">@delay</span>  = <span class="ruby-identifier">initial_delay</span>
+<span class="ruby-comment"># File lib/delayers/base.rb, line 5</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">delay</span>)
+  <span class="ruby-ivar">@delay</span> = <span class="ruby-identifier">delay</span>
 <span class="ruby-keyword">end</span></pre>
             </div><!-- new-source -->
             
@@ -223,12 +248,12 @@
         <h3 class="section-header">Public Instance Methods</h3>
 
       
-        <div id="log_delay-method" class="method-detail ">
-          <a name="method-i-log_delay"></a>
+        <div id="log-method" class="method-detail ">
+          <a name="method-i-log"></a>
 
           
           <div class="method-heading">
-            <span class="method-name">log_delay</span><span
+            <span class="method-name">log</span><span
               class="method-args">()</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
@@ -240,20 +265,22 @@
             
 
             
-            <div class="method-source-code" id="log_delay-source">
+            <div class="method-source-code" id="log-source">
 <pre>
-<span class="ruby-comment"># File lib/delayers/base.rb, line 15</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">log_delay</span>
-  <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;[Delayer] delaying for #{self}&quot;</span>
+<span class="ruby-comment"># File lib/delayers/base.rb, line 16</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">log</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">nil?</span>
+
+  <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-string">&quot;Delayer&quot;</span>) { <span class="ruby-node">&quot;delaying for #{self}&quot;</span> }
 <span class="ruby-keyword">end</span></pre>
-            </div><!-- log_delay-source -->
+            </div><!-- log-source -->
             
           </div>
 
           
 
           
-        </div><!-- log_delay-method -->
+        </div><!-- log-method -->
 
       
         <div id="sleep-method" class="method-detail ">
@@ -275,9 +302,9 @@
             
             <div class="method-source-code" id="sleep-source">
 <pre>
-<span class="ruby-comment"># File lib/delayers/base.rb, line 9</span>
+<span class="ruby-comment"># File lib/delayers/base.rb, line 10</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">sleep</span>
-  <span class="ruby-identifier">log_delay</span>
+  <span class="ruby-identifier">log</span>
   <span class="ruby-constant">Kernel</span>.<span class="ruby-identifier">sleep</span>(<span class="ruby-ivar">@delay</span>)
 <span class="ruby-keyword">end</span></pre>
             </div><!-- sleep-source -->
@@ -309,7 +336,7 @@
             
             <div class="method-source-code" id="to_s-source">
 <pre>
-<span class="ruby-comment"># File lib/delayers/base.rb, line 20</span>
+<span class="ruby-comment"># File lib/delayers/base.rb, line 23</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
   <span class="ruby-node">&quot;#{@delay}s&quot;</span>
 <span class="ruby-keyword">end</span></pre>

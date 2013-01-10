@@ -136,13 +136,15 @@
         
           <li><a href="../Wait/ExponentialDelayer.html">Wait::ExponentialDelayer</a></li>
         
-          <li><a href="../Wait/InvalidResult.html">Wait::InvalidResult</a></li>
-        
           <li><a href="../Wait/PassiveRaiser.html">Wait::PassiveRaiser</a></li>
         
           <li><a href="../Wait/PassiveTester.html">Wait::PassiveTester</a></li>
         
           <li><a href="../Wait/RegularDelayer.html">Wait::RegularDelayer</a></li>
+        
+          <li><a href="../Wait/ResultInvalid.html">Wait::ResultInvalid</a></li>
+        
+          <li><a href="../Wait/SignalRaiser.html">Wait::SignalRaiser</a></li>
         
           <li><a href="../Wait/TimeoutError.html">Wait::TimeoutError</a></li>
         
@@ -200,6 +202,23 @@
           </div>
         </div>
         
+        <div id="logger-attribute-method" class="method-detail">
+          <a name="logger"></a>
+          
+          <a name="logger="></a>
+          
+          <div class="method-heading attribute-method-heading">
+            <span class="method-name">logger</span><span
+              class="attribute-access-type">[RW]</span>
+          </div>
+
+          <div class="method-description">
+          
+          
+          
+          </div>
+        </div>
+        
       </div><!-- attribute-method-details -->
       
 
@@ -215,7 +234,7 @@
           
           <div class="method-heading">
             <span class="method-name">new</span><span
-              class="method-args">(logger, total)</span>
+              class="method-args">(total)</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
           
@@ -228,9 +247,8 @@
             
             <div class="method-source-code" id="new-source">
 <pre>
-<span class="ruby-comment"># File lib/counters/base.rb, line 5</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">logger</span>, <span class="ruby-identifier">total</span>)
-  <span class="ruby-ivar">@logger</span> = <span class="ruby-identifier">logger</span>
+<span class="ruby-comment"># File lib/counters/base.rb, line 6</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">total</span>)
   <span class="ruby-comment"># Attempt to prevent causing an infinite loop by being very strict about</span>
   <span class="ruby-comment"># the value passed.</span>
   <span class="ruby-keyword">unless</span> <span class="ruby-identifier">total</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Fixnum</span>) <span class="ruby-keyword">and</span> <span class="ruby-identifier">total</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
@@ -238,7 +256,6 @@
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-ivar">@total</span> = <span class="ruby-identifier">total</span>
-  <span class="ruby-identifier">reset</span>
 <span class="ruby-keyword">end</span></pre>
             </div><!-- new-source -->
             
@@ -275,7 +292,7 @@
             
             <div class="method-source-code" id="increment-source">
 <pre>
-<span class="ruby-comment"># File lib/counters/base.rb, line 23</span>
+<span class="ruby-comment"># File lib/counters/base.rb, line 22</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">increment</span>
   <span class="ruby-ivar">@attempt</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
   <span class="ruby-identifier">log</span>
@@ -309,7 +326,7 @@
             
             <div class="method-source-code" id="last_attempt-3F-source">
 <pre>
-<span class="ruby-comment"># File lib/counters/base.rb, line 29</span>
+<span class="ruby-comment"># File lib/counters/base.rb, line 28</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">last_attempt?</span>
   <span class="ruby-ivar">@attempt</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@total</span>
 <span class="ruby-keyword">end</span></pre>
@@ -342,9 +359,11 @@
             
             <div class="method-source-code" id="log-source">
 <pre>
-<span class="ruby-comment"># File lib/counters/base.rb, line 34</span>
+<span class="ruby-comment"># File lib/counters/base.rb, line 33</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">log</span>
-  <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">debug</span> <span class="ruby-node">&quot;[Counter] attempt #{self}&quot;</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">nil?</span>
+
+  <span class="ruby-ivar">@logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-string">&quot;Counter&quot;</span>) { <span class="ruby-node">&quot;attempt #{self}&quot;</span> }
 <span class="ruby-keyword">end</span></pre>
             </div><!-- log-source -->
             
@@ -375,7 +394,7 @@
             
             <div class="method-source-code" id="reset-source">
 <pre>
-<span class="ruby-comment"># File lib/counters/base.rb, line 18</span>
+<span class="ruby-comment"># File lib/counters/base.rb, line 17</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">reset</span>
   <span class="ruby-ivar">@attempt</span> = <span class="ruby-value">0</span>
 <span class="ruby-keyword">end</span></pre>
@@ -408,7 +427,7 @@
             
             <div class="method-source-code" id="to_s-source">
 <pre>
-<span class="ruby-comment"># File lib/counters/base.rb, line 39</span>
+<span class="ruby-comment"># File lib/counters/base.rb, line 40</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">to_s</span>
   [<span class="ruby-ivar">@attempt</span>, <span class="ruby-ivar">@total</span>].<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;/&quot;</span>)
 <span class="ruby-keyword">end</span></pre>

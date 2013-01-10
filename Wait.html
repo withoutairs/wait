@@ -58,6 +58,9 @@
             <li><a href="./lib/raisers/passive_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
               class="thickbox" title="lib/raisers/passive.rb">lib/raisers/passive.rb</a></li>
           
+            <li><a href="./lib/raisers/signal_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/raisers/signal.rb">lib/raisers/signal.rb</a></li>
+          
             <li><a href="./lib/rescuers/base_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
               class="thickbox" title="lib/rescuers/base.rb">lib/rescuers/base.rb</a></li>
           
@@ -69,6 +72,9 @@
           
             <li><a href="./lib/testers/truthy_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
               class="thickbox" title="lib/testers/truthy.rb">lib/testers/truthy.rb</a></li>
+          
+            <li><a href="./lib/version_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/version.rb">lib/version.rb</a></li>
           
             <li><a href="./lib/wait_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
               class="thickbox" title="lib/wait.rb">lib/wait.rb</a></li>
@@ -115,13 +121,15 @@
           
           <li><span class="type">CLASS</span> <a href="Wait/ExponentialDelayer.html">Wait::ExponentialDelayer</a></li>
           
-          <li><span class="type">CLASS</span> <a href="Wait/InvalidResult.html">Wait::InvalidResult</a></li>
-          
           <li><span class="type">CLASS</span> <a href="Wait/PassiveRaiser.html">Wait::PassiveRaiser</a></li>
           
           <li><span class="type">CLASS</span> <a href="Wait/PassiveTester.html">Wait::PassiveTester</a></li>
           
           <li><span class="type">CLASS</span> <a href="Wait/RegularDelayer.html">Wait::RegularDelayer</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="Wait/ResultInvalid.html">Wait::ResultInvalid</a></li>
+          
+          <li><span class="type">CLASS</span> <a href="Wait/SignalRaiser.html">Wait::SignalRaiser</a></li>
           
           <li><span class="type">CLASS</span> <a href="Wait/TimeoutError.html">Wait::TimeoutError</a></li>
           
@@ -200,13 +208,15 @@
         
           <li><a href="./Wait/ExponentialDelayer.html">Wait::ExponentialDelayer</a></li>
         
-          <li><a href="./Wait/InvalidResult.html">Wait::InvalidResult</a></li>
-        
           <li><a href="./Wait/PassiveRaiser.html">Wait::PassiveRaiser</a></li>
         
           <li><a href="./Wait/PassiveTester.html">Wait::PassiveTester</a></li>
         
           <li><a href="./Wait/RegularDelayer.html">Wait::RegularDelayer</a></li>
+        
+          <li><a href="./Wait/ResultInvalid.html">Wait::ResultInvalid</a></li>
+        
+          <li><a href="./Wait/SignalRaiser.html">Wait::SignalRaiser</a></li>
         
           <li><a href="./Wait/TimeoutError.html">Wait::TimeoutError</a></li>
         
@@ -248,6 +258,11 @@
         <dl>
         
           <dt><a name="DEFAULT">DEFAULT</a></dt>
+          
+          <dd class="description"></dd>
+          
+        
+          <dt><a name="VERSION">VERSION</a></dt>
           
           <dd class="description"></dd>
           
@@ -321,7 +336,7 @@ href="Wait/TruthyTester.html">Wait::TruthyTester</a>.</p>
 </dd><dt>:raiser</dt>
 <dd>
 <p>Strategy used to raise specific exceptions. Default is <a
-href="Wait/PassiveRaiser.html">Wait::PassiveRaiser</a>.</p>
+href="Wait/SignalRaiser.html">Wait::SignalRaiser</a>.</p>
 </dd></dl>
             
 
@@ -330,17 +345,23 @@ href="Wait/PassiveRaiser.html">Wait::PassiveRaiser</a>.</p>
 <pre>
 <span class="ruby-comment"># File lib/wait.rb, line 48</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">options</span> = {})
-  <span class="ruby-identifier">debug</span>       = <span class="ruby-identifier">options</span>[<span class="ruby-value">:debug</span>]    <span class="ruby-operator">||</span> <span class="ruby-keyword">false</span>
-  <span class="ruby-ivar">@logger</span>     = (<span class="ruby-identifier">options</span>[<span class="ruby-value">:logger</span>]  <span class="ruby-operator">||</span> (<span class="ruby-identifier">debug</span> <span class="ruby-operator">?</span> <span class="ruby-constant">DebugLogger</span> <span class="ruby-operator">:</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:logger</span>])).<span class="ruby-identifier">new</span>
-  <span class="ruby-identifier">attempts</span>    = <span class="ruby-identifier">options</span>[<span class="ruby-value">:attempts</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:attempts</span>]
-  <span class="ruby-ivar">@counter</span>    = (<span class="ruby-identifier">options</span>[<span class="ruby-value">:counter</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:counter</span>]).<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@logger</span>, <span class="ruby-identifier">attempts</span>)
-  <span class="ruby-ivar">@timeout</span>    = <span class="ruby-identifier">options</span>[<span class="ruby-value">:timeout</span>]  <span class="ruby-operator">||</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:timeout</span>]
-  <span class="ruby-identifier">delay</span>       = <span class="ruby-identifier">options</span>[<span class="ruby-value">:delay</span>]    <span class="ruby-operator">||</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:delay</span>]
-  <span class="ruby-ivar">@delayer</span>    = (<span class="ruby-identifier">options</span>[<span class="ruby-value">:delayer</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:delayer</span>]).<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@logger</span>, <span class="ruby-identifier">delay</span>)
-  <span class="ruby-identifier">exceptions</span>  = <span class="ruby-identifier">options</span>[<span class="ruby-value">:rescue</span>]
-  <span class="ruby-ivar">@rescuer</span>    = (<span class="ruby-identifier">options</span>[<span class="ruby-value">:rescuer</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:rescuer</span>]).<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@logger</span>, <span class="ruby-identifier">exceptions</span>)
-  <span class="ruby-ivar">@tester</span>     = <span class="ruby-identifier">options</span>[<span class="ruby-value">:tester</span>]   <span class="ruby-operator">||</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:tester</span>]
-  <span class="ruby-ivar">@raiser</span>     = <span class="ruby-identifier">options</span>[<span class="ruby-value">:raiser</span>]   <span class="ruby-operator">||</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:raiser</span>]
+  <span class="ruby-comment"># Assign defaults.</span>
+  <span class="ruby-identifier">debug</span>      = <span class="ruby-identifier">options</span>[<span class="ruby-value">:debug</span>]    <span class="ruby-operator">||</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-ivar">@logger</span>    = <span class="ruby-identifier">options</span>[<span class="ruby-value">:logger</span>]   <span class="ruby-operator">||</span> (<span class="ruby-identifier">debug</span> <span class="ruby-operator">?</span> <span class="ruby-constant">DebugLogger</span> <span class="ruby-operator">:</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:logger</span>]).<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">attempts</span>   = <span class="ruby-identifier">options</span>[<span class="ruby-value">:attempts</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:attempts</span>]
+  <span class="ruby-ivar">@counter</span>   = <span class="ruby-identifier">options</span>[<span class="ruby-value">:counter</span>]  <span class="ruby-operator">||</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:counter</span>].<span class="ruby-identifier">new</span>(<span class="ruby-identifier">attempts</span>)
+  <span class="ruby-ivar">@timeout</span>   = <span class="ruby-identifier">options</span>[<span class="ruby-value">:timeout</span>]  <span class="ruby-operator">||</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:timeout</span>]
+  <span class="ruby-identifier">delay</span>      = <span class="ruby-identifier">options</span>[<span class="ruby-value">:delay</span>]    <span class="ruby-operator">||</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:delay</span>]
+  <span class="ruby-ivar">@delayer</span>   = <span class="ruby-identifier">options</span>[<span class="ruby-value">:delayer</span>]  <span class="ruby-operator">||</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:delayer</span>].<span class="ruby-identifier">new</span>(<span class="ruby-identifier">delay</span>)
+  <span class="ruby-identifier">exceptions</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:rescue</span>]
+  <span class="ruby-ivar">@rescuer</span>   = <span class="ruby-identifier">options</span>[<span class="ruby-value">:rescuer</span>]  <span class="ruby-operator">||</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:rescuer</span>].<span class="ruby-identifier">new</span>(<span class="ruby-identifier">exceptions</span>)
+  <span class="ruby-ivar">@tester</span>    = <span class="ruby-identifier">options</span>[<span class="ruby-value">:tester</span>]   <span class="ruby-operator">||</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:tester</span>].<span class="ruby-identifier">new</span>
+  <span class="ruby-ivar">@raiser</span>    = <span class="ruby-identifier">options</span>[<span class="ruby-value">:raiser</span>]   <span class="ruby-operator">||</span> <span class="ruby-constant">DEFAULT</span>[<span class="ruby-value">:raiser</span>].<span class="ruby-identifier">new</span>
+
+  <span class="ruby-comment"># Assign the logger to each of the strategies.</span>
+  [<span class="ruby-ivar">@counter</span>, <span class="ruby-ivar">@delayer</span>, <span class="ruby-ivar">@rescuer</span>, <span class="ruby-ivar">@tester</span>, <span class="ruby-ivar">@raiser</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">strategy</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">strategy</span>.<span class="ruby-identifier">logger</span> = <span class="ruby-ivar">@logger</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">strategy</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:logger=</span>)
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
             </div><!-- new-source -->
             
@@ -392,12 +413,12 @@ execution until:</p>
 # =&gt; #&lt;Wait&gt;
 wait.until { Time.now.sec.even? }
 # [Counter] attempt 1/5
-# [Tester] result: false
-# [Rescuer] rescued: Wait::InvalidResult: Wait::InvalidResult
-# [Raiser] raise? Wait::InvalidResult: false
+# [Tester]  result: false
+# [Rescuer] rescued: Wait::ResultInvalid
+# [Raiser]  not raising: Wait::ResultInvalid
 # [Delayer] delaying for 1s
 # [Counter] attempt 2/5
-# [Tester] result: true
+# [Tester]  result: true
 # =&gt; true</pre>
 
 <p>If you wish to handle an exception by attempting the block again, pass one
@@ -413,16 +434,16 @@ wait.until do |attempt|
   end
 end
 # [Counter] attempt 1/5
-# [Tester] result: nil
-# [Rescuer] rescued: Wait::InvalidResult: Wait::InvalidResult
-# [Raiser] raise? Wait::InvalidResult: false
+# [Tester]  result: nil
+# [Rescuer] rescued: Wait::ResultInvalid
+# [Raiser]  not raising: Wait::ResultInvalid
 # [Delayer] delaying for 1s
 # [Counter] attempt 2/5
-# [Rescuer] rescued: RuntimeError: RuntimeError
-# [Raiser] raise? RuntimeError: false
+# [Rescuer] rescued: RuntimeError
+# [Raiser]  not raising: RuntimeError
 # [Delayer] delaying for 1s
 # [Counter] attempt 3/5
-# [Tester] result: &quot;foo&quot;
+# [Tester]  result: &quot;foo&quot;
 # =&gt; &quot;foo&quot;</pre>
 
 <h2>Returns</h2>
@@ -437,7 +458,7 @@ end
             
             <div class="method-source-code" id="until-source">
 <pre>
-<span class="ruby-comment"># File lib/wait.rb, line 118</span>
+<span class="ruby-comment"># File lib/wait.rb, line 124</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">until</span>(&amp;<span class="ruby-identifier">block</span>)
   <span class="ruby-comment"># Reset the attempt counter.</span>
   <span class="ruby-ivar">@counter</span>.<span class="ruby-identifier">reset</span>
@@ -450,14 +471,12 @@ end
       <span class="ruby-keyword">yield</span>(<span class="ruby-ivar">@counter</span>.<span class="ruby-identifier">attempt</span>)
     <span class="ruby-keyword">end</span>
     <span class="ruby-comment"># Raise an exception unless the result is valid.</span>
-    <span class="ruby-identifier">tester</span> = <span class="ruby-ivar">@tester</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@logger</span>, <span class="ruby-identifier">result</span>)
-    <span class="ruby-identifier">tester</span>.<span class="ruby-identifier">valid?</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">result</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">raise</span>(<span class="ruby-constant">InvalidResult</span>)
-  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">TimeoutError</span>, <span class="ruby-constant">InvalidResult</span>, *<span class="ruby-ivar">@rescuer</span>.<span class="ruby-identifier">exceptions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">exception</span>
+    <span class="ruby-ivar">@tester</span>.<span class="ruby-identifier">valid?</span>(<span class="ruby-identifier">result</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">result</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">raise</span>(<span class="ruby-constant">ResultInvalid</span>)
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">TimeoutError</span>, <span class="ruby-constant">ResultInvalid</span>, *<span class="ruby-ivar">@rescuer</span>.<span class="ruby-identifier">exceptions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">exception</span>
     <span class="ruby-comment"># Log the exception.</span>
     <span class="ruby-ivar">@rescuer</span>.<span class="ruby-identifier">log</span>(<span class="ruby-identifier">exception</span>)
     <span class="ruby-comment"># Raise the exception if it ought to be.</span>
-    <span class="ruby-identifier">raiser</span> = <span class="ruby-ivar">@raiser</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@logger</span>, <span class="ruby-identifier">exception</span>)
-    <span class="ruby-identifier">raise</span>(<span class="ruby-identifier">exception</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">raiser</span>.<span class="ruby-identifier">raise?</span>
+    <span class="ruby-identifier">raise</span>(<span class="ruby-identifier">exception</span>) <span class="ruby-keyword">if</span> <span class="ruby-ivar">@raiser</span>.<span class="ruby-identifier">raise?</span>(<span class="ruby-identifier">exception</span>)
     <span class="ruby-comment"># Raise the exception if this was the last attempt.</span>
     <span class="ruby-identifier">raise</span>(<span class="ruby-identifier">exception</span>) <span class="ruby-keyword">if</span> <span class="ruby-ivar">@counter</span>.<span class="ruby-identifier">last_attempt?</span>
     <span class="ruby-comment"># Sleep before the next attempt.</span>

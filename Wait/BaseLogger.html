@@ -67,9 +67,9 @@
           
           <li><a href="#method-c-new">::new</a></li>
           
-          <li><a href="#method-i-backtrace">#backtrace</a></li>
-          
           <li><a href="#method-i-formatter">#formatter</a></li>
+          
+          <li><a href="#method-i-indent">#indent</a></li>
           
           <li><a href="#method-i-level">#level</a></li>
           
@@ -132,13 +132,15 @@
         
           <li><a href="../Wait/ExponentialDelayer.html">Wait::ExponentialDelayer</a></li>
         
-          <li><a href="../Wait/InvalidResult.html">Wait::InvalidResult</a></li>
-        
           <li><a href="../Wait/PassiveRaiser.html">Wait::PassiveRaiser</a></li>
         
           <li><a href="../Wait/PassiveTester.html">Wait::PassiveTester</a></li>
         
           <li><a href="../Wait/RegularDelayer.html">Wait::RegularDelayer</a></li>
+        
+          <li><a href="../Wait/ResultInvalid.html">Wait::ResultInvalid</a></li>
+        
+          <li><a href="../Wait/SignalRaiser.html">Wait::SignalRaiser</a></li>
         
           <li><a href="../Wait/TimeoutError.html">Wait::TimeoutError</a></li>
         
@@ -246,39 +248,6 @@
         <h3 class="section-header">Public Instance Methods</h3>
 
       
-        <div id="backtrace-method" class="method-detail ">
-          <a name="method-i-backtrace"></a>
-
-          
-          <div class="method-heading">
-            <span class="method-name">backtrace</span><span
-              class="method-args">(backtrace)</span>
-            <span class="method-click-advice">click to toggle source</span>
-          </div>
-          
-
-          <div class="method-description">
-            
-            
-            
-
-            
-            <div class="method-source-code" id="backtrace-source">
-<pre>
-<span class="ruby-comment"># File lib/loggers/base.rb, line 28</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">backtrace</span>(<span class="ruby-identifier">backtrace</span>)
-  <span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span> (<span class="ruby-string">&quot; &quot;</span> * <span class="ruby-value">25</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">line</span> }.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;\n&quot;</span>)
-<span class="ruby-keyword">end</span></pre>
-            </div><!-- backtrace-source -->
-            
-          </div>
-
-          
-
-          
-        </div><!-- backtrace-method -->
-
-      
         <div id="formatter-method" class="method-detail ">
           <a name="method-i-formatter"></a>
 
@@ -300,8 +269,8 @@
 <pre>
 <span class="ruby-comment"># File lib/loggers/base.rb, line 22</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">formatter</span>
-  <span class="ruby-identifier">proc</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">severity</span>, <span class="ruby-identifier">datetime</span>, <span class="ruby-identifier">program_name</span>, <span class="ruby-identifier">message</span><span class="ruby-operator">|</span>
-    [<span class="ruby-identifier">severity</span>.<span class="ruby-identifier">ljust</span>(<span class="ruby-value">5</span>), <span class="ruby-identifier">message</span>].<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot; &quot;</span>) <span class="ruby-operator">+</span> <span class="ruby-string">&quot;\n&quot;</span>
+  <span class="ruby-identifier">proc</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">severity</span>, <span class="ruby-identifier">datetime</span>, <span class="ruby-identifier">caller</span>, <span class="ruby-identifier">message</span><span class="ruby-operator">|</span>
+    <span class="ruby-node">&quot;#{severity.ljust(5)} #{&quot;[#{caller}]&quot;.ljust(9)} #{message}\n&quot;</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
             </div><!-- formatter-source -->
@@ -312,6 +281,39 @@
 
           
         </div><!-- formatter-method -->
+
+      
+        <div id="indent-method" class="method-detail ">
+          <a name="method-i-indent"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">indent</span><span
+              class="method-args">(lines, spaces = 25)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="indent-source">
+<pre>
+<span class="ruby-comment"># File lib/loggers/base.rb, line 28</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">indent</span>(<span class="ruby-identifier">lines</span>, <span class="ruby-identifier">spaces</span> = <span class="ruby-value">25</span>)
+  <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span> (<span class="ruby-string">&quot; &quot;</span> * <span class="ruby-identifier">spaces</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">line</span> }.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;\n&quot;</span>)
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- indent-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- indent-method -->
 
       
         <div id="level-method" class="method-detail ">

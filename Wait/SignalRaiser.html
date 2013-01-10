@@ -5,7 +5,7 @@
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 
-  <title>Class: Wait::InvalidResult</title>
+  <title>Class: Wait::SignalRaiser</title>
 
   <link rel="stylesheet" href="../rdoc.css" type="text/css" media="screen" />
 
@@ -34,8 +34,8 @@
         <div class="section-body">
           <ul>
           
-            <li><a href="../lib/wait_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
-              class="thickbox" title="lib/wait.rb">lib/wait.rb</a></li>
+            <li><a href="../lib/raisers/signal_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/raisers/signal.rb">lib/raisers/signal.rb</a></li>
           
           </ul>
         </div>
@@ -50,7 +50,7 @@
       <div id="parent-class-section" class="section">
         <h3 class="section-header">Parent</h3>
         
-        <p class="link">RuntimeError</p>
+        <p class="link"><a href="BaseRaiser.html">Wait::BaseRaiser</a></p>
         
       </div>
       
@@ -59,6 +59,18 @@
 
       
 
+      
+      <!-- Method Quickref -->
+      <div id="method-list-section" class="section">
+        <h3 class="section-header">Methods</h3>
+        <ul class="link-list">
+          
+          <li><a href="#method-i-raise-3F">#raise?</a></li>
+          
+          <li><a href="#method-i-signal_exception-3F">#signal_exception?</a></li>
+          
+        </ul>
+      </div>
       
 
       
@@ -116,13 +128,15 @@
         
           <li><a href="../Wait/ExponentialDelayer.html">Wait::ExponentialDelayer</a></li>
         
-          <li><a href="../Wait/InvalidResult.html">Wait::InvalidResult</a></li>
-        
           <li><a href="../Wait/PassiveRaiser.html">Wait::PassiveRaiser</a></li>
         
           <li><a href="../Wait/PassiveTester.html">Wait::PassiveTester</a></li>
         
           <li><a href="../Wait/RegularDelayer.html">Wait::RegularDelayer</a></li>
+        
+          <li><a href="../Wait/ResultInvalid.html">Wait::ResultInvalid</a></li>
+        
+          <li><a href="../Wait/SignalRaiser.html">Wait::SignalRaiser</a></li>
         
           <li><a href="../Wait/TimeoutError.html">Wait::TimeoutError</a></li>
         
@@ -143,12 +157,10 @@
   </div>
 
   <div id="documentation">
-    <h1 class="class">Wait::InvalidResult</h1>
+    <h1 class="class">Wait::SignalRaiser</h1>
 
     <div id="description" class="description">
       
-<p>Raised when a block returns an invalid result.</p>
-
     </div><!-- description -->
 
     
@@ -165,6 +177,80 @@
 
       <!-- Methods -->
       
+      <div id="public-instance-method-details" class="method-section section">
+        <h3 class="section-header">Public Instance Methods</h3>
+
+      
+        <div id="raise-3F-method" class="method-detail ">
+          <a name="method-i-raise-3F"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">raise?</span><span
+              class="method-args">(exception)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="raise-3F-source">
+<pre>
+<span class="ruby-comment"># File lib/raisers/signal.rb, line 3</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">raise?</span>(<span class="ruby-identifier">exception</span>)
+  <span class="ruby-identifier">signal_exception?</span>(<span class="ruby-identifier">exception</span>.<span class="ruby-identifier">class</span>).<span class="ruby-identifier">tap</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">raising</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">log</span>(<span class="ruby-identifier">exception</span>, <span class="ruby-identifier">raising</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- raise-3F-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- raise-3F-method -->
+
+      
+        <div id="signal_exception-3F-method" class="method-detail ">
+          <a name="method-i-signal_exception-3F"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">signal_exception?</span><span
+              class="method-args">(klass)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Returns <tt>true</tt> if an exception raised is a signal exception.</p>
+            
+
+            
+            <div class="method-source-code" id="signal_exception-3F-source">
+<pre>
+<span class="ruby-comment"># File lib/raisers/signal.rb, line 10</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">signal_exception?</span>(<span class="ruby-identifier">klass</span>)
+  [<span class="ruby-constant">SignalException</span>, <span class="ruby-constant">Interrupt</span>, <span class="ruby-constant">NoMemoryError</span>, <span class="ruby-constant">SystemExit</span>].<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">klass</span>)
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- signal_exception-3F-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- signal_exception-3F-method -->
+
+      
+      </div><!-- public-instance-method-details -->
+    
     </div><!-- 5Buntitled-5D -->
   
 
