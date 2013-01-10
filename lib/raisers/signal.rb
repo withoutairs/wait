@@ -8,7 +8,7 @@ class Wait
 
     # Returns +true+ if an exception raised is a signal exception.
     def signal_exception?(klass)
-      klass.ancestors.include?(SignalException) or [NoMemoryError, SystemExit].include?(klass)
+      [SignalException, Interrupt, NoMemoryError, SystemExit].include?(klass)
     end
   end # SignalRaiser
 end # Wait
