@@ -24,9 +24,5 @@ class Wait
         "#{severity.ljust(5)} #{"[#{caller}]".ljust(9)} #{message}\n"
       end
     end
-
-    def indent(lines, spaces = 25)
-      lines.map { |line| (" " * spaces) + line }.join("\n")
-    end
   end # Logger
 end # Wait
