@@ -2,7 +2,7 @@ class Wait
   class BaseTester
     attr_accessor :logger
 
-    # Returns +true+ if a result if valid.
+    # Returns +true+ if a result is valid.
     def valid?(result)
       log(result)
 
