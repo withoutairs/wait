@@ -14,12 +14,13 @@ Rake::TestTask.new do |task|
   task.libs << "test"
 end
 
-Rake::RDocTask.new do |rd|
-  rd.title = "wait gem"
+Rake::RDocTask.new do |rdoc|
+  rdoc.title = 'wait gem'
+  rdoc.rdoc_files.include('lib')
 end
 
 Gokdok::Dokker.new do |gd|
-  gd.repo_url = "git@github.com:paperlesspost/wait.git"
+  gd.repo_url = 'git@github.com:toddmazierski/wait.git'
   gd.remote_path = "./"
 end
 

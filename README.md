@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/paperlesspost/wait.png?branch=master)](https://travis-ci.org/paperlesspost/wait)
+[![Build Status](https://travis-ci.org/toddmazierski/wait.png?branch=master)](https://travis-ci.org/toddmazierski/wait)
 
 ## Description
 
@@ -13,7 +13,7 @@ The wait gem executes a block until there's a valid (by default, truthy) result.
 Add to your `Gemfile`:
 
 ```ruby
-gem "wait", "~> 0.5.1"
+gem "wait", "~> 0.5.2"
 ```
 
 ## Examples
@@ -92,4 +92,4 @@ end
 
 ## Documentation
 
-RDoc-generated documentation available [here](http://paperlesspost.github.com/wait/).
+RDoc-generated documentation available [here](http://toddmazierski.github.io/wait/Wait.html).
