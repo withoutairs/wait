@@ -2,3 +2,12 @@ test/reports
 .gh_pages
 html
 *.gem
+
+# Ignore bundler config.
+.bundle
+
+# Ignore vendored gems installed by Bundler.
+vendor/bundle
+
+# Ignore built gems.
+*.gem
