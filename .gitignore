@@ -3,3 +3,8 @@
 
 # Ignore rbenv specification files.
 .rbenv-*
+
+# No reason to check these in
+*.xls*
+*.csv
+splunk/

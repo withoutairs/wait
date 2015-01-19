@@ -28,7 +28,7 @@ class Mint
 
   # Returns the Mint transactions CSV.
   def csv
-    RestClient.get(CSV_URL, :cookies => @cookies)
+    response = RestClient.get(CSV_URL, :cookies => @cookies)
   end
 
   # A (hopefully) temporary workaround for bug #6:
