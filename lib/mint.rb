@@ -1,4 +1,10 @@
 class Mint
+  class MintCsvTester < Wait::BaseTester
+    def valid?(result)
+      result[0..5] == '"Date"'
+    end
+  end
+
   class AuthenticationError < StandardError; end
 
   BASE_URL  = 'https://wwws.mint.com'
@@ -35,16 +41,17 @@ class Mint
   #
   #   https://github.com/toddmazierski/mint-exporter/issues/6
   #
-  # Attempts to download the CSV up to 10 times, pausing for 5 seconds between
-  # each attempt.
   def csv_with_bug_6_workaround
     wait = Wait.new(
-      :attempts => 10,
+      :attempts => 180,
       :timeout  => 60,
-      :delay    => 5,
-      :rescue   => RestClient::ResourceNotFound
+      :delay    => 1,
+      :rescue   => RestClient::ResourceNotFound,
+      :debug    => true,
+      :tester   => MintCsvTester.new()
     )
 
     wait.until { csv }
   end
 end
+
