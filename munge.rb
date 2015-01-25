@@ -61,7 +61,11 @@ categories_map = {
 'Bills & Utilities' => 'Bills & Utilities',
 'Laundry' => 'Dry Cleaning',
 'Electronics & Software' => 'Electronics & Software',
-'Home Services' => 'Home Services'
+'Home Services' => 'Home Services',
+'Books' => 'Books',
+'Sporting Goods' => 'Shopping',
+'Service & Parts' => 'Car',
+'Auto & Transport' => 'Car'
 }
 csv.each { |row|
   date = row['Date']
