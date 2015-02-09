@@ -37,11 +37,12 @@ categories_map = {
     'Parking' => 'Car',
     'Property Tax' => 'Property Tax',
     'Financial' => 'Financial',
-    'Mobile Phone' => 'Mobile Phone',
+    'Mobile Phone' => 'Utilities',
     'Charity' => 'Charity',
-    'Internet' => 'Internet',
+    'Internet' => 'Utilities',
     'Personal Care' => 'Personal Care',
     'Cash' => 'Cash',
+    'Cash & ATM' => 'Cash',
     'Auto Service' => 'Auto Service',
     'Pharmacy' => 'Health Care',
     'Doctor' => 'Health Care',
@@ -49,24 +50,52 @@ categories_map = {
     'Health Care' => 'Health Care',
     'Babysitter & Daycare' => 'Nanny',
     'Clothing' => 'Clothing',
-    'Music' => 'Home Entertainment',
-    'Rental Car & Taxi' => 'Rental Car & Taxi',
-    'Movies & DVDs' => 'Movies & DVDs',
+    'Music' => 'Entertainment',
+    'Rental Car & Taxi' => 'Getting Around',
+    'Movies & DVDs' => 'Entertainment',
     'Pets' => 'Pets',
-    'Newspapers & Magazines' => 'Newspapers & Magazines',
-    'Spa & Massage' => 'Spa & Massage',
-    'Gift' => 'Gift',
+    'Newspapers & Magazines' => 'Entertainment',
+    'Spa & Massage' => 'Personal Care',
+    'Gift' => 'Gifts',
+    'Gifts & Donations' => 'Gifts',
     'Transfer for Cash Spending' => 'Cash',
     'ATM Fee' => 'Cash',
-    'Public Transportation' => 'Public Transportation',
-    'Laundry' => 'Dry Cleaning',
-    'Electronics & Software' => 'Electronics & Software',
+    'Public Transportation' => 'Getting Around',
+    'Laundry' => 'Home Services',
+    'Electronics & Software' => 'Entertainment',
     'Home Services' => 'Home Services',
-    'Books' => 'Books',
+    'Books' => 'Entertainment',
     'Sporting Goods' => 'Shopping',
     'Service & Parts' => 'Car',
     'Auto & Transport' => 'Car',
     'Bills & Utilities' => 'Utilities',
+    'Federal Tax' => 'Tax',
+    'Dentist' => 'Health Care',
+    'Interest Income' => 'Income',
+    'Home Insurance' => 'Financial',
+    'Pet Food & Supplies' => 'Pets',
+    'Hobbies' => 'Shopping',
+    'Furnishings' => 'Furnishings',
+    'Hotel' => 'Vacation',
+    'Tuition' => 'Education',
+    '2238 N Leavitt' => '2238',
+    'Shipping' => 'Shopping',
+    'Office Supplies' => 'Shopping',
+    'Health & Fitness' => 'Health Care',
+    'Entertainment' => 'Entertainment',
+    'Water Bill' => 'Utilities',
+    'Toys' => 'Gifts',
+    'Kids' => 'Gifts',
+    'Fees & Charges' => 'Cash',
+    'Kids Birthday' => 'Kids Activities',
+    'Business Services' => 'Home Services',
+    'Hair' => 'Personal Care',
+    'Veterinary' => 'Pets',
+    'State Tax' => 'Tax',
+    'Printing' => 'Entertainment',
+    'Amusement' => 'Kids Activities',
+    'Home' => 'Home',
+
 
 }
 outcsv = CSV.open("munged.csv", "wb")
@@ -83,8 +112,7 @@ csv.each { |row|
   next if (row['Category'] == 'Income')
   next if (row['Category'] == 'Transfer')
 
-  next unless date.strftime('%Y') == '2015'
-  next unless date.strftime('%m') == '01'
+  next unless (row['Sortable'] == '2015-02' or row['Sortable'] == '2015-01' or row['Sortable'] == '2014-12' or row['Sortable'] == '2014-11' or row['Sortable'] == '2014-10' or row['Sortable'] == '2014-09')
 
   category = categories_map[row['Category']] || row['Category']
 
@@ -98,7 +126,6 @@ csv.each { |row|
 
   if first then
     outcsv << csv.headers
-    puts row.headers().join(',')
     first = false
   end
 
