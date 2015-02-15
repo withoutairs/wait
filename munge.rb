@@ -112,7 +112,7 @@ csv.each { |row|
   next if (row['Category'] == 'Income')
   next if (row['Category'] == 'Transfer')
 
-  next unless (row['Sortable'] == '2015-02' or row['Sortable'] == '2015-01' or row['Sortable'] == '2014-12' or row['Sortable'] == '2014-11' or row['Sortable'] == '2014-10' or row['Sortable'] == '2014-09')
+  next unless (row['Year'] == '2015' or row['Sortable'] == '2014-12' or row['Sortable'] == '2014-11' or row['Sortable'] == '2014-10' or row['Sortable'] == '2014-09')
 
   category = categories_map[row['Category']] || row['Category']
 
