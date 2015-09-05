@@ -1,5 +1,4 @@
 require 'csv'
-require 'pp'
 CSV::Converters[:mint] = lambda { |s|
   begin
     DateTime.strptime(s, '%m/%d/%Y')
@@ -9,6 +8,7 @@ CSV::Converters[:mint] = lambda { |s|
 }
 csv = CSV.read('mint-transactions.csv', :headers => true, :converters => [:all, :mint])
 categories_seen = {}
+sortables = {}
 categories_map = {
     'Home Improvement' => 'Home Improvement',
     '1508 Mortgage' => '1508 Mortgage',
@@ -98,39 +98,56 @@ categories_map = {
 
 
 }
-outcsv = CSV.open("munged.csv", "wb")
 first = true
 csv.each { |row|
-
-  date = row['Date']
-  row << ['Month', date.strftime('%m')]
-  row << ['Year', date.strftime('%Y')]
-  row << ['Sortable', date.strftime('%Y-%m')]
 
   next if (row['Category'] == 'Paycheck')
   next if (row['Category'] == 'Credit Card Payment')
   next if (row['Category'] == 'Income')
   next if (row['Category'] == 'Transfer')
 
-  next unless (row['Year'] == '2015' or row['Sortable'] == '2014-12' or row['Sortable'] == '2014-11' or row['Sortable'] == '2014-10' or row['Sortable'] == '2014-09')
+  date = row['Date']
+  sortable = date.strftime('%Y-%m')
+  row << ['Month', date.strftime('%m')]
+  row << ['Year', date.strftime('%Y')]
 
+  next unless (row['Year'] == '2015' or sortable == '2014-12' or sortable == '2014-11' or sortable == '2014-10' or sortable == '2014-09')
+
+  sortables[sortable] = ""
+  row << ['Sortable', sortable]
   category = categories_map[row['Category']] || row['Category']
 
   row['Category'] = category
   amount = row['Amount']
-  tally = categories_seen[category] ? categories_seen[category] : {:count => 0, :amount => 0}
+  unless (categories_seen[category]) then 
+    categories_seen[category] = {}
+  end
+  if (categories_seen[category] and categories_seen[category].has_key?(sortable)) then
+    tally = categories_seen[category][sortable]
+  else
+    tally = {:count => 0, :amount => 0}
+  end
   tally[:count] += 1
   tally[:amount] += amount
-  categories_seen[category] = tally
+  categories_seen[category][sortable] = tally
   puts "#{category} was not expected: $#{amount} #{row['Description']} on #{date}" unless ((categories_map.include?(category)) || (categories_map.values.include?(category)))
 
-  if first then
-    outcsv << csv.headers
-    first = false
-  end
-
-  outcsv << row
 }
-pp categories_seen.sort_by { |_, tally| -tally[:count] }
+
+# the header's first column is blank, this is where the categories go
+summary_csv = File.open('summary.csv','wb')
+summary_csv << ""
+sortables.keys.each { |sortable| summary_csv << ',' + sortable }
+summary_csv << "\n"
+
+# each cell in the summary is the sortables for the category
+categories_seen.keys.sort.each { |category|
+  summary_csv << category
+  sortables.keys.each { |sortable| 
+    amount = categories_seen[category][sortable] ? categories_seen[category][sortable][:amount].round(2).to_s : "0"
+    summary_csv << "," + amount
+  }
+  summary_csv << "\n"
+}
 
 
