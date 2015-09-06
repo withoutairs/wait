@@ -95,15 +95,15 @@ categories_map = {
     'Printing' => 'Entertainment',
     'Amusement' => 'Kids Activities',
     'Home' => 'Home',
+    'Paycheck' => 'Paycheck',
 
 
 }
 first = true
+details_csv = File.open('details.csv','wb')
 csv.each { |row|
 
-  next if (row['Category'] == 'Paycheck')
   next if (row['Category'] == 'Credit Card Payment')
-  next if (row['Category'] == 'Income')
   next if (row['Category'] == 'Transfer')
 
   date = row['Date']
@@ -116,9 +116,38 @@ csv.each { |row|
   sortables[sortable] = ""
   row << ['Sortable', sortable]
   category = categories_map[row['Category']] || row['Category']
+  description = row['Description']
+  amount = row['Amount']
+  if (category == 'Paycheck') then
+    if (description == 'Aurora Investmen Payrolldirect') then
+      category = 'Chris Paycheck'
+    elsif (description == 'Direct Deposit Rally') then
+      category = 'Chris Paycheck'
+    elsif (description == 'Direct Deposit Aon') then
+      category = 'Katey Paycheck'
+    elsif (description == 'Aon Direct Paydirect') then
+      category = 'Katey Paycheck'
+    elsif (description == 'Aon Service Corp') then
+      category = 'Katey Paycheck'
+    elsif (description == 'Hewitt Associate Dir') then
+      category = 'Katey Paycheck'
+
+    # one-offs
+    elsif (description == 'Direct Deposit Vgi') then
+      next
+    elsif (description == 'Direct Deposit Jpmorgan') then
+      next
+    elsif (description == 'Nordstrom Transdirect Deposit') then
+     amount = amount * -1
+     category = 'Clothing'
+    else
+      category = description
+      puts "Strange 'Paycheck': " + description + " for " + amount.to_s + " on " + date.to_s
+    end
+    categories_map[category] = category
+  end
 
   row['Category'] = category
-  amount = row['Amount']
   unless (categories_seen[category]) then 
     categories_seen[category] = {}
   end
@@ -132,6 +161,13 @@ csv.each { |row|
   categories_seen[category][sortable] = tally
   puts "#{category} was not expected: $#{amount} #{row['Description']} on #{date}" unless ((categories_map.include?(category)) || (categories_map.values.include?(category)))
 
+  if first then
+    first = false
+    details_csv << csv.headers.join(',')
+    details_csv << "\n"
+  end
+
+  details_csv << row
 }
 
 # the header's first column is blank, this is where the categories go
