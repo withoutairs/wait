@@ -79,7 +79,7 @@ categories_map = {
     'Furnishings' => 'Furnishings',
     'Hotel' => 'Vacation',
     'Tuition' => 'Education',
-    '2238 N Leavitt' => '0 Income: 2238',
+    '2238 N Leavitt' => '2238 N Leavitt',
     'Shipping' => 'Shopping',
     'Office Supplies' => 'Shopping',
     'Health & Fitness' => 'Health Care',
@@ -97,9 +97,8 @@ categories_map = {
     'Amusement' => 'Kids Activities',
     'Home' => 'Home',
     'Paycheck' => 'Paycheck',
-
-
 }
+
 first = true
 details_csv = File.open('details.csv','wb')
 csv.each { |row|
@@ -119,6 +118,16 @@ csv.each { |row|
   category = categories_map[row['Category']] || row['Category']
   description = row['Description']
   amount = row['Amount']
+
+  if (category == '2238 N Leavitt') then
+    if (row['Transaction Type'] == 'debit') then
+      category = 'Expenses: 2238'
+    else
+      category = '0 Income: 2238'
+    end
+    categories_map[category] = category
+  end
+
   if (category == 'Paycheck') then
     if (description == 'Aurora Investmen Payrolldirect') then
       category = '0 Chris Paycheck'
