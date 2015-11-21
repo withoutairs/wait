@@ -11,8 +11,8 @@ categories_seen = {}
 sortables = {}
 categories_map = {
     'Home Improvement' => 'Home Improvement',
-    '1508 Mortgage' => '1508 Mortgage',
-    'Mortgage & Rent' => '2238 Mortgage',
+    '1508 Mortgage' => 'Mortgage: 1508',
+    'Mortgage & Rent' => 'Mortgage: 2238',
     'Shopping' => 'Shopping',
     'Clothes' => 'Clothes',
     'Groceries' => 'Groceries',
@@ -32,6 +32,7 @@ categories_map = {
     'Gym' => 'Gym',
     'Business Expense' => 'Business Expense',
     'Utilities' => 'Utilities',
+    'Auto Insurance' => 'Car',
     'Gas & Fuel' => 'Car',
     'Car' => 'Car',
     'Parking' => 'Car',
@@ -78,7 +79,7 @@ categories_map = {
     'Furnishings' => 'Furnishings',
     'Hotel' => 'Vacation',
     'Tuition' => 'Education',
-    '2238 N Leavitt' => '2238',
+    '2238 N Leavitt' => '0 Income: 2238',
     'Shipping' => 'Shopping',
     'Office Supplies' => 'Shopping',
     'Health & Fitness' => 'Health Care',
@@ -120,17 +121,17 @@ csv.each { |row|
   amount = row['Amount']
   if (category == 'Paycheck') then
     if (description == 'Aurora Investmen Payrolldirect') then
-      category = 'Chris Paycheck'
+      category = '0 Chris Paycheck'
     elsif (description == 'Direct Deposit Rally') then
-      category = 'Chris Paycheck'
+      category = '0 Chris Paycheck'
     elsif (description == 'Direct Deposit Aon') then
-      category = 'Katey Paycheck'
+      category = '0 Katey Paycheck'
     elsif (description == 'Aon Direct Paydirect') then
-      category = 'Katey Paycheck'
+      category = '0 Katey Paycheck'
     elsif (description == 'Aon Service Corp') then
-      category = 'Katey Paycheck'
+      category = '0 Katey Paycheck'
     elsif (description == 'Hewitt Associate Dir') then
-      category = 'Katey Paycheck'
+      category = '0 Katey Paycheck'
 
     # one-offs
     elsif (description == 'Direct Deposit Vgi') then
